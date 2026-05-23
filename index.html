@@ -2,313 +2,552 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GrammarStudio</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Technical ESL Grammar Engine</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
 
+    <style>
         :root {
-            --bg: #0d0d0d;
-            --surface: #1a1a1a;
-            --surface-hover: #262626;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --accent: #6366f1; /* Indigo */
-            --success: #10b981;
-            --error: #ef4444;
-            --border: #333333;
+            /* Design Tokens */
+            --ink: #111111;
+            --paper: #FAFAFA;
+            --surface: #F4F4F2;
+            --accent: #2A7F7F;
+            --error: #C84B31;
+            --warning: #D4A017;
+            --success: #2D6A4F;
+            --muted: #707070;
+            --shadow: rgba(17, 17, 17, 0.08);
+
+            /* Typography */
+            --font-ui: 'DM Sans', sans-serif;
+            --font-code: 'DM Mono', monospace;
+            --font-header: 'Playfair Display', serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
-            line-height: 1.5;
-            padding-bottom: 4rem;
+            font-family: var(--font-ui);
+            background-color: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
-
-        .container { max-width: 600px; margin: 0 auto; padding: 0 1rem; }
 
         header {
-            padding: 1.5rem 0;
-            margin-bottom: 1rem;
-            border-bottom: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+            border-bottom: 1px solid var(--surface);
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-family: var(--font-header);
+            font-weight: 700;
+            font-size: 2rem;
+            color: var(--ink);
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--muted);
+            font-size: 1.1rem;
+        }
+
+        main {
+            padding: 0 1.5rem 4rem 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 2rem;
         }
 
-        h1 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; }
-        
-        .score {
-            font-family: 'JetBrains Mono', monospace;
-            background: var(--surface);
-            padding: 0.25rem 0.75rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            border: 1px solid var(--border);
-        }
-
-        /* Navigation */
-        .nav-scroll {
-            display: flex;
-            overflow-x: auto;
-            gap: 0.5rem;
-            padding-bottom: 1rem;
-            scrollbar-width: none;
-        }
-        .nav-scroll::-webkit-scrollbar { display: none; }
-
-        .unit-tab {
-            background: var(--surface);
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-            padding: 0.5rem 1rem;
+        /* Mobile-First Card Layout */
+        .card {
+            background-color: #ffffff;
+            border: 1px solid var(--surface);
             border-radius: 8px;
-            cursor: pointer;
-            white-space: nowrap;
-            font-weight: 500;
-            transition: all 0.2s;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            transition: all 0.3s ease;
         }
 
-        .unit-tab.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        /* Content Area */
-        .unit-header { margin: 1.5rem 0; }
-        .unit-header h2 { font-size: 1.5rem; margin-bottom: 0.25rem; }
-        .unit-header p { color: var(--text-muted); font-size: 0.95rem; }
-
-        .exercise-card {
+        .scenario-badge {
+            display: inline-flex;
             background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-        }
-
-        .ex-title {
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
-        .question { margin-bottom: 1.25rem; font-size: 1rem; }
-        
-        input[type="text"] {
-            font-family: 'JetBrains Mono', monospace;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid var(--text-muted);
             color: var(--accent);
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+            align-self: flex-start;
+        }
+
+        .prompt {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--ink);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        input[type="text"] {
+            font-family: var(--font-code);
             font-size: 1rem;
-            padding: 0.1rem 0.25rem;
-            width: 140px;
-            text-align: center;
-            outline: none;
-        }
-
-        input[type="text"]:focus { border-bottom-color: var(--accent); }
-        input[type="text"]:disabled { color: var(--text-main); border-bottom-style: dashed; }
-
-        .btn {
-            display: block;
+            min-height: 48px;
+            padding: 0 1rem;
+            border: 2px solid var(--surface);
+            border-radius: 6px;
+            color: var(--ink);
+            background: var(--paper);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
             width: 100%;
-            background: var(--text-main);
-            color: var(--bg);
-            border: none;
-            padding: 0.75rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 1rem;
         }
-        .btn:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; }
 
-        .feedback { display: block; font-size: 0.875rem; margin-top: 0.5rem; min-height: 20px; }
-        .feedback.success { color: var(--success); }
-        .feedback.error { color: var(--error); }
-        .hint { display: block; color: var(--text-muted); margin-top: 0.25rem; font-size: 0.8rem; }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(42, 127, 127, 0.1);
+        }
+
+        input[type="text"]:read-only {
+            background: var(--surface);
+            cursor: not-allowed;
+            color: var(--muted);
+        }
+
+        button {
+            font-family: var(--font-ui);
+            font-weight: 700;
+            font-size: 1rem;
+            min-height: 48px;
+            min-width: 48px;
+            padding: 0 1.5rem;
+            border: none;
+            border-radius: 6px;
+            background-color: var(--ink);
+            color: var(--paper);
+            cursor: pointer;
+            transition: transform 0.1s ease, background-color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button:hover {
+            background-color: var(--muted);
+        }
+
+        button:disabled {
+            background-color: var(--surface);
+            color: var(--muted);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .feedback {
+            display: none;
+            padding: 1rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        .feedback strong {
+            font-family: var(--font-code);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* States */
+        .card.state-success { border-color: var(--success); }
+        .card.state-success .feedback {
+            display: block;
+            background: rgba(45, 106, 79, 0.1);
+            color: var(--success);
+        }
+        
+        .card.state-success-hint { border-color: var(--success); }
+        .card.state-success-hint .feedback {
+            display: block;
+            background: rgba(45, 106, 79, 0.1);
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+
+        .card.state-warning { border-color: var(--warning); }
+        .card.state-warning .feedback {
+            display: block;
+            background: rgba(212, 160, 23, 0.1);
+            color: #A37A11;
+        }
+
+        .card.state-error { border-color: var(--error); }
+        .card.state-error .feedback {
+            display: block;
+            background: rgba(200, 75, 49, 0.1);
+            color: var(--error);
+        }
+        .card.state-error input[type="text"] {
+            border-color: var(--error);
+            color: var(--error);
+            text-decoration: line-through;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Desktop Grid Layout (>= 768px) */
+        @media (min-width: 768px) {
+            .card {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+                align-items: start;
+                padding: 2rem;
+            }
+            .card-header {
+                grid-column: 1 / 2;
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .card-interaction {
+                grid-column: 2 / 3;
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .input-group {
+                flex-direction: row;
+                align-items: stretch;
+            }
+            .input-group button {
+                flex-shrink: 0;
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
     <header>
-        <h1>GrammarStudio</h1>
-        <div class="score" id="scoreDisplay">Score: 0/0</div>
+        <h1>Engineering Contextual Grammar</h1>
+        <p>Unit 4: Advanced Tense Dynamics & Situational Communication</p>
     </header>
 
-    <div class="nav-scroll" id="navContainer">
-        </div>
+    <main id="app-root"></main>
 
-    <main id="appContent">
-        </main>
-</div>
-
-<script>
-    // ==========================================
-    // 🧠 THE DATABASE (Add as many as you want here)
-    // ==========================================
-    const courseData = [
-        {
-            id: 1,
-            title: "Unit 1",
-            subtitle: "Present Simple vs Continuous",
-            exercises: [
-                {
-                    title: "1.1 The Remote Work Setup",
-                    type: "fill",
-                    questions: [
-                        { text: "Normally, I [work] from home on Fridays.", answer: "work", hint: "Routine = Present Simple" },
-                        { text: "But today, I [am working] from a cafe because the wifi is down.", answer: "am working|'m working", hint: "Temporary action = Present Continuous" },
-                        { text: "The client [wants] the prototype by tomorrow morning.", answer: "wants", hint: "State verbs (want) are never continuous." },
-                        { text: "We [are reviewing] the brand guidelines right now on the call.", answer: "are reviewing|'re reviewing", hint: "Happening exactly right now." }
-                    ]
-                },
-                {
-                    title: "1.2 Feedback Loop",
-                    type: "fill",
-                    questions: [
-                        { text: "She always [leaves] great comments in the Figma file.", answer: "leaves", hint: "Habitual action" },
-                        { text: "Why [are you changing] the layout? We already approved it.", answer: "are you changing", hint: "Action happening at this moment" },
-                        { text: "I [do not understand] why they want a darker color palette.", answer: "do not understand|don't understand", hint: "State verb 'understand'" },
-                        { text: "The team [is trying] to finish the presentation before the meeting.", answer: "is trying|'re trying", hint: "Current ongoing effort" }
-                    ]
-                }
-            ]
-        },
-        {
-            id: 2,
-            title: "Unit 2",
-            subtitle: "Past Simple vs Present Perfect",
-            exercises: [
-                {
-                    title: "2.1 Project Status Check",
-                    type: "fill",
-                    questions: [
-                        { text: "I [have finished] the coaching plan for the junior designer.", answer: "have finished|'ve finished", hint: "Action is complete, but time is not specified (focus is on the result)." },
-                        { text: "I [spoke] to him about it yesterday afternoon.", answer: "spoke", hint: "Finished time (yesterday) = Past Simple." },
-                        { text: "We [have not received] the copy from the marketing team yet.", answer: "have not received|haven't received", hint: "Up to the present moment (yet)." },
-                        { text: "They [launched] the new retail locations last month.", answer: "launched", hint: "Finished time (last month)." }
-                    ]
-                },
-                {
-                    title: "2.2 Client Escalation",
-                    type: "fill",
-                    questions: [
-                        { text: "[Have you seen] the latest email from the CEO?", answer: "have you seen", hint: "Checking recent experience." },
-                        { text: "Yes, she [sent] it ten minutes ago.", answer: "sent", hint: "Specific past time (ten minutes ago)." },
-                        { text: "The script [has crashed] three times this morning.", answer: "has crashed", hint: "Morning is not over yet." }
-                    ]
-                }
-            ]
-        },
-        // ADD UNIT 3, 4, 5... HERE USING THE EXACT SAME FORMAT
-        {
-            id: 3,
-            title: "Unit 3",
-            subtitle: "Placeholders",
-            exercises: [
-                { title: "3.1 Empty for now", type: "fill", questions: [{ text: "Type [yes] here.", answer: "yes", hint: "" }] }
-            ]
-        }
-    ];
-
-    // ==========================================
-    // ⚙️ THE APP ENGINE (Do not edit below)
-    // ==========================================
-    let currentUnit = 1;
-    let totalQuestions = 0;
-    let correctAnswers = 0;
-
-    function init() {
-        const nav = document.getElementById('navContainer');
-        courseData.forEach(unit => {
-            const btn = document.createElement('button');
-            btn.className = `unit-tab ${unit.id === currentUnit ? 'active' : ''}`;
-            btn.textContent = unit.title;
-            btn.onclick = () => renderUnit(unit.id);
-            nav.appendChild(btn);
-        });
-        renderUnit(currentUnit);
-    }
-
-    function renderUnit(unitId) {
-        currentUnit = unitId;
-        document.querySelectorAll('.unit-tab').forEach((btn, idx) => {
-            btn.className = `unit-tab ${courseData[idx].id === currentUnit ? 'active' : ''}`;
-        });
-
-        const unitData = courseData.find(u => u.id === unitId);
-        let html = `<div class="unit-header"><h2>${unitData.title}</h2><p>${unitData.subtitle}</p></div>`;
-
-        unitData.exercises.forEach((ex, exIdx) => {
-            html += `<div class="exercise-card" id="ex-${exIdx}">
-                        <div class="ex-title">${ex.title}</div>`;
-            
-            ex.questions.forEach((q, qIdx) => {
-                totalQuestions++;
-                let textParts = q.text.split(/\[.*?\]/);
-                let inputHtml = `<input type="text" data-ans="${q.answer}" placeholder="type here">`;
-                html += `<div class="question">
-                            ${textParts[0]}${inputHtml}${textParts[1]}
-                            <div class="feedback" id="fb-${exIdx}-${qIdx}"></div>
-                            ${q.hint ? `<span class="hint">💡 ${q.hint}</span>` : ''}
-                         </div>`;
-            });
-            html += `<button class="btn" onclick="checkGroup(${exIdx})">Check Answers</button></div>`;
-        });
-
-        document.getElementById('appContent').innerHTML = html;
-        updateScore();
-    }
-
-    function checkGroup(exIdx) {
-        const card = document.getElementById(`ex-${exIdx}`);
-        const inputs = card.querySelectorAll('input');
-        let allFilled = true;
-
-        inputs.forEach((input, qIdx) => {
-            if(input.disabled) return;
-            let val = input.value.toLowerCase().trim();
-            let answers = input.dataset.ans.split('|').map(a => a.toLowerCase().trim());
-            let fb = document.getElementById(`fb-${exIdx}-${qIdx}`);
-
-            if(!val) { allFilled = false; fb.className="feedback error"; fb.textContent="Please fill this in."; return; }
-
-            if(answers.includes(val)) {
-                input.disabled = true;
-                fb.className = "feedback success";
-                fb.textContent = "✓ Correct";
-                correctAnswers++;
-            } else {
-                fb.className = "feedback error";
-                fb.innerHTML = `✗ Expected: <b>${answers[0]}</b>`;
-                input.disabled = true;
+    <!-- DATA-DRIVEN CORE: Single Source of Truth -->
+    <script type="application/json" id="exercise-data">
+        [
+            {
+                "id": "ex_01",
+                "concept": "Present Perfect Continuous",
+                "prompt": "You are currently updating the CTO on your crypto arbitrage bot. You began refactoring the Go backend engine three hours ago, and the work is actively ongoing right now. What do you say?",
+                "targetAnswers": [
+                    "I have been refactoring the Go engine",
+                    "I am refactoring the Go engine",
+                    "I've been refactoring the Go engine"
+                ],
+                "explanation": "Use the Present Perfect Continuous to emphasize the continuous duration of an action that started in the past and is still ongoing.",
+                "properNouns": ["Go", "CTO"]
+            },
+            {
+                "id": "ex_02",
+                "concept": "Auxiliary Verb Base Form",
+                "prompt": "Fix the broken error handling message sent by a junior engineer in Slack:\n'The automated pipeline didn't built the asset library components correctly.'",
+                "targetAnswers": [
+                    "The automated pipeline didn't build the asset library components correctly",
+                    "The automated pipeline did not build the asset library components correctly"
+                ],
+                "explanation": "After an auxiliary negative like 'did not' or 'didn't', you must use the bare base infinitive form ('build') instead of forcing a past tense inflected verb form ('built').",
+                "properNouns": ["Slack"]
+            },
+            {
+                "id": "ex_03",
+                "concept": "Future in the Past",
+                "prompt": "During yesterday's sprint retrospective, Elena mentioned her original plan for the LLM token limits before the API constraints changed. She intended to increase the context window.",
+                "targetAnswers": [
+                    "She was going to increase the context window",
+                    "She intended to increase the context window",
+                    "She planned to increase the context window"
+                ],
+                "explanation": "When discussing past intentions or plans that were established before conditions changed, use 'was/were going to' + base verb.",
+                "properNouns": ["Elena", "LLM", "API"]
+            },
+            {
+                "id": "ex_04",
+                "concept": "Passive Voice Context",
+                "prompt": "Oksana is asking what happened to the old typography system. Inform her that it was removed by the design operations team last week.",
+                "targetAnswers": [
+                    "It was removed by the design operations team last week",
+                    "It was deprecated by the design operations team last week",
+                    "The old typography system was removed by the design operations team last week"
+                ],
+                "explanation": "Use the passive voice ('was removed') when the structural focus is on the object experiencing the action rather than the actor performing it.",
+                "properNouns": ["Oksana"]
+            },
+            {
+                "id": "ex_05",
+                "concept": "Third Conditional Form",
+                "prompt": "Reflect on a failed launch: If Andrii had implemented the A/B testing framework, the user drop-off rate wouldn't have spiked to 40%.",
+                "targetAnswers": [
+                    "If Andrii had implemented the A/B testing framework, the user drop-off rate wouldn't have spiked to 40%",
+                    "If Andrii had implemented the A/B testing framework the user drop-off rate would not have spiked to 40%"
+                ],
+                "explanation": "The third conditional requires 'If + past perfect (had implemented), ... would have + past participle (would not have spiked)' to describe hypothetical past outcomes.",
+                "properNouns": ["Andrii", "A/B"]
             }
-        });
+        ]
+    </script>
 
-        if(allFilled) {
-            card.querySelector('.btn').disabled = true;
-            card.querySelector('.btn').textContent = "Completed";
-        }
-        updateScore();
-    }
+    <!-- ENGINE RUNTIME LOGIC -->
+    <script>
+        const GrammarEngine = {
+            data: [],
+            
+            init() {
+                try {
+                    const rawData = document.getElementById('exercise-data').textContent;
+                    this.data = JSON.parse(rawData);
+                    this.renderUI();
+                } catch (error) {
+                    console.error("Critical Engine Error: Failed to parse exercise-data JSON payload.", error);
+                }
+            },
 
-    function updateScore() {
-        document.getElementById('scoreDisplay').textContent = `Score: ${correctAnswers}/${totalQuestions}`;
-    }
+            // Phase A: Normalization Pipeline
+            normalize(str) {
+                let s = str;
+                // 1. Quote Cleanse
+                s = s.replace(/[`‘’]/g, "'");
+                // 2. Noise Stripping (Trailing punctuation & Conversational filler)
+                s = s.replace(/[.,!?;:]+$/, "");
+                s = s.replace(/^(please|well|hi|hey|so|listen)[,\s]+/i, "");
+                // 3. Contraction Expansion
+                const contractions = {
+                    "don't": "do not", "won't": "will not", "can't": "cannot",
+                    "it's": "it is", "didn't": "did not", "i'm": "i am",
+                    "i've": "i have", "i'll": "i will", "wouldn't": "would not",
+                    "couldn't": "could not", "shouldn't": "should not",
+                    "aren't": "are not", "isn't": "is not", "they're": "they are",
+                    "we're": "we are", "you're": "you are"
+                };
+                for (const [contracted, expanded] of Object.entries(contractions)) {
+                    const regex = new RegExp(`\\b${contracted}\\b`, "gi");
+                    s = s.replace(regex, expanded);
+                }
+                // 4. Dialect Uniformity (UK -> US defaults)
+                s = s.replace(/ise\b/g, "ize")
+                     .replace(/our\b/g, "or")
+                     .replace(/yse\b/g, "yze");
+                
+                return s.trim().toLowerCase();
+            },
 
-    init();
-</script>
+            // Levenshtein Matrix Calculation
+            calculateLevenshtein(a, b) {
+                const matrix = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+                for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+                for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+
+                for (let i = 1; i <= a.length; i++) {
+                    for (let j = 1; j <= b.length; j++) {
+                        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j] + 1,      // deletion
+                            matrix[i][j - 1] + 1,      // insertion
+                            matrix[i - 1][j - 1] + cost // substitution
+                        );
+                    }
+                }
+                return matrix[a.length][b.length];
+            },
+
+            // Phase B: Sequence Evaluation Matrix
+            evaluateSequence(inputStr, index) {
+                if (!inputStr.trim()) return null;
+
+                const ex = this.data[index];
+                const normalizedInput = this.normalize(inputStr);
+                const inputTokens = normalizedInput.split(/\s+/);
+                
+                let bestMatchStatus = 'error';
+                let bestMatchTarget = null;
+                let lowestDistance = Infinity;
+
+                for (let target of ex.targetAnswers) {
+                    const normalizedTarget = this.normalize(target);
+                    const targetTokens = normalizedTarget.split(/\s+/);
+                    
+                    // Exact Match Validation
+                    if (normalizedInput === normalizedTarget) {
+                        bestMatchStatus = 'success';
+                        
+                        // Check Proper Noun Capitalization
+                        if (ex.properNouns) {
+                            for (let noun of ex.properNouns) {
+                                // If the original input contains the lowercase version, but not the properly capitalized one
+                                if (inputStr.includes(noun.toLowerCase()) && !inputStr.includes(noun)) {
+                                    bestMatchStatus = 'success-hint';
+                                    break;
+                                }
+                            }
+                        }
+                        bestMatchTarget = target;
+                        break; // Stop checking, perfect match found
+                    }
+
+                    // Warning condition evaluation
+                    if (inputTokens.length === targetTokens.length) {
+                        const distance = this.calculateLevenshtein(normalizedInput, normalizedTarget);
+                        if (distance <= 3 && distance < lowestDistance) {
+                            lowestDistance = distance;
+                            bestMatchStatus = 'warning';
+                            bestMatchTarget = target;
+                        }
+                    }
+                }
+
+                return {
+                    status: bestMatchStatus,
+                    correctTarget: ex.targetAnswers[0], // Provide the primary correct answer for errors
+                    explanation: ex.explanation,
+                    properNouns: ex.properNouns
+                };
+            },
+
+            // Controller: Execute Validation & DOM State Update
+            checkFieldState(index) {
+                const inputEl = document.getElementById(`input-${index}`);
+                const btnEl = document.getElementById(`btn-${index}`);
+                const cardEl = document.getElementById(`card-${index}`);
+                const feedbackEl = document.getElementById(`feedback-${index}`);
+                
+                const evaluation = this.evaluateSequence(inputEl.value, index);
+                
+                if (!evaluation) return; // Empty input, ignore
+
+                // Reset states
+                cardEl.className = 'card';
+                btnEl.disabled = true;
+
+                if (evaluation.status === 'success') {
+                    cardEl.classList.add('state-success');
+                    feedbackEl.innerHTML = `✓ Perfect validation.`;
+                    inputEl.readOnly = true;
+                } 
+                else if (evaluation.status === 'success-hint') {
+                    cardEl.classList.add('state-success-hint');
+                    const nouns = evaluation.properNouns.join(', ');
+                    feedbackEl.innerHTML = `✓ Correct grammar. <strong>Style note:</strong> Capitalize proprietary terms or names (e.g., ${nouns}).`;
+                    inputEl.readOnly = true;
+                }
+                else if (evaluation.status === 'warning') {
+                    cardEl.classList.add('state-warning');
+                    feedbackEl.innerHTML = `Almost! Check your spelling or look for a small typo.`;
+                    btnEl.disabled = false; // Re-enable for retry
+                }
+                else {
+                    cardEl.classList.add('state-error');
+                    feedbackEl.innerHTML = `<strong>Correction:</strong> ${evaluation.correctTarget}<br><br>${evaluation.explanation}`;
+                    inputEl.readOnly = true;
+                }
+            },
+
+            // DOM Render Engine
+            renderUI() {
+                const root = document.getElementById('app-root');
+                root.innerHTML = ''; // Clear prior mounts
+
+                this.data.forEach((ex, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.id = `card-${index}`;
+
+                    const header = document.createElement('div');
+                    header.className = 'card-header';
+                    
+                    const badge = document.createElement('div');
+                    badge.className = 'scenario-badge';
+                    badge.textContent = ex.concept;
+
+                    const prompt = document.createElement('p');
+                    prompt.className = 'prompt';
+                    prompt.textContent = ex.prompt;
+
+                    header.appendChild(badge);
+                    header.appendChild(prompt);
+
+                    const interaction = document.createElement('div');
+                    interaction.className = 'card-interaction';
+
+                    const inputGroup = document.createElement('div');
+                    inputGroup.className = 'input-group';
+
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.id = `input-${index}`;
+                    input.placeholder = "Construct response...";
+                    input.autocomplete = "off";
+                    input.spellcheck = false;
+
+                    const btn = document.createElement('button');
+                    btn.id = `btn-${index}`;
+                    btn.textContent = "Check Answer";
+                    btn.onclick = () => this.checkFieldState(index);
+
+                    input.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') this.checkFieldState(index);
+                    });
+
+                    inputGroup.appendChild(input);
+                    inputGroup.appendChild(btn);
+
+                    const feedback = document.createElement('div');
+                    feedback.className = 'feedback';
+                    feedback.id = `feedback-${index}`;
+
+                    interaction.appendChild(inputGroup);
+                    interaction.appendChild(feedback);
+
+                    card.appendChild(header);
+                    card.appendChild(interaction);
+
+                    root.appendChild(card);
+                });
+            }
+        };
+
+        // Bootstrap the application on mount
+        document.addEventListener('DOMContentLoaded', () => GrammarEngine.init());
+    </script>
 </body>
 </html>
