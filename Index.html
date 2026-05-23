@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Sprint | Professional English</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Playfair+Display:wght@600;700&display=swap');
+
+        :root {
+            --ink: #1a1a2e;
+            --paper: #f5f0e8;
+            --cream: #ede8dc;
+            --accent: #c84b31;
+            --gold: #d4a017;
+            --teal: #2a7f7f;
+            --muted: #7a7060;
+            --success: #2d6a4f;
+            --error: #c84b31;
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--ink);
+            color: var(--ink);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* Mobile App Container */
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            background-color: var(--paper);
+            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Sticky Header */
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--paper);
+            z-index: 100;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--cream);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--ink);
+        }
+
+        .score-badge {
+            background-color: var(--muted);
+            color: white;
+            font-family: 'DM Mono', monospace;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: background-color 0.3s ease;
+        }
+        .score-badge.passing {
+            background-color: var(--success);
+        }
+
+        /* Tab Navigation */
+        .unit-nav {
+            display: flex;
+            background-color: var(--cream);
+            padding: 0.5rem 1.5rem 0;
+            gap: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.75rem 1rem;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            color: var(--muted);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            color: var(--ink);
+            border-bottom: 3px solid var(--accent);
+        }
+
+        /* Unit Panels */
+        .unit-panel {
+            display: none;
+            padding: 1.5rem;
+            padding-bottom: 4rem;
+        }
+
+        .unit-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .subtitle {
+            color: var(--muted);
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Key Rule Box */
+        .rule-box {
+            background-color: white;
+            border-left: 4px solid var(--teal);
+            padding: 1rem;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .rule-box p {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .rule-box .example {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--teal);
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        /* Exercises */
+        .exercise {
+            background-color: white;
+            padding: 1.25rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .ex-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            color: var(--ink);
+            border-bottom: 1px solid var(--cream);
+            padding-bottom: 0.5rem;
+        }
+
+        .context {
+            font-style: italic;
+            color: var(--muted);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Inputs */
+        input[type="text"] {
+            font-family: 'DM Mono', monospace;
+            border: none;
+            border-bottom: 2px solid var(--muted);
+            background: transparent;
+            color: var(--teal);
+            font-size: 1rem;
+            padding: 0.2rem 0;
+            width: auto;
+            min-width: 120px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        input[type="text"]:focus {
+            border-bottom-color: var(--teal);
+        }
+        
+        input[type="text"]:read-only {
+            cursor: not-allowed;
+            border-bottom-style: dashed;
+        }
+
+        .full-width-input {
+            width: 100% !important;
+            text-align: left !important;
+            margin-top: 0.5rem;
+        }
+
+        /* Check Buttons */
+        .check-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--ink);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: var(--radius);
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-top: 1.5rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .check-btn:active {
+            opacity: 0.8;
+        }
+        
+        .check-btn:disabled {
+            background-color: var(--muted);
+            cursor: not-allowed;
+        }
+
+        /* Feedback */
+        .feedback {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            display: block;
+            min-height: 1.2rem;
+        }
+
+        .feedback.error { color: var(--error); }
+        .feedback.success { color: var(--success); }
+        .feedback.hint { color: var(--gold); }
+        .feedback .correct-ans { font-weight: bold; }
+        .feedback .reason { display: block; margin-top: 0.25rem; color: var(--muted); }
+
+        /* Multiple Choice */
+        .mc-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mc-btn {
+            background-color: var(--paper);
+            border: 2px solid transparent;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            text-align: left;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mc-btn:hover { background-color: var(--cream); }
+        
+        .mc-btn.selected {
+            border-color: var(--teal);
+            background-color: rgba(42, 127, 127, 0.1);
+        }
+
+        .mc-btn.correct { background-color: rgba(45, 106, 79, 0.1); border-color: var(--success); }
+        .mc-btn.wrong { background-color: rgba(200, 75, 49, 0.1); border-color: var(--error); }
+
+        /* Item Rows */
+        .q-row { margin-bottom: 1.25rem; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <h1>GrammarSprint</h1>
+        <div class="score-badge" id="score-badge">Score: 0%</div>
+    </header>
+
+    <nav class="unit-nav">
+        <button class="tab-btn active" onclick="showUnit(7)">Unit 7</button>
+        <button class="tab-btn" onclick="showUnit(8)">Unit 8</button>
+    </nav>
+
+    <main>
+        <!-- ================= UNIT 7 ================= -->
+        <div id="unit-7" class="unit-panel active">
+            <h2>Unit 7</h2>
+            <p class="subtitle">Present Perfect (I have done)</p>
+            
+            <div class="rule-box">
+                <p>Use the <strong>Present Perfect</strong> to show a past action that has a result <em>now</em>, or an experience from the past up to the present moment.</p>
+                <span class="example">"I have updated the Figma file." (It is updated now)</span>
+                <span class="example">"Has the client replied yet?" (We are waiting now)</span>
+            </div>
+
+            <!-- EXERCISE 7.1: Fill-in (Narrative) -->
+            <div class="exercise" id="ex7_1">
+                <div class="ex-title">7.1 Standup Update</div>
+                <p class="context">Natalia, the PM, is messaging the team on Slack. Complete the gaps.</p>
+                
+                <div class="q-row">
+                    1. "Hey team, 
+                    <input type="text" data-answer="have you finished|have u finished" placeholder="you / finish"> 
+                    the user testing yet?"
+                    <div class="feedback"></div>
+                </div>
+                
+                <div class="q-row">
+                    2. "No, Marcus is sick. He 
+                    <input type="text" data-answer="has not conducted|hasn't conducted|has not done|hasn't done" placeholder="not / conduct"> 
+                    the interviews."
+                    <div class="feedback"></div>
+                </div>
+
+                <div class="q-row">
+                    3. "Okay, but I need the data today. I 
+                    <input type="text" data-answer="have built|'ve built|have created|'ve created" placeholder="build"> 
+                    the presentation, but the slides are empty."
+                    <div class="feedback"></div>
+                </div>
+
+                <button class="check-btn" onclick="checkFillInGroup('ex7_1')">Check Answers</button>
+            </div>
+
+            <!-- EXERCISE 7.2: Situational Questions -->
+            <div class="exercise" id="ex7_2">
+                <div class="ex-title">7.2 Client Comm (Situational)</div>
+                <p class="context">Write the direct question or statement based on the situation. No word prompts provided.</p>
+
+                <div class="q-row">
+                    1. You want to know if the creative director reviewed your mood board. Ask him directly.<br>
+                    <input type="text" class="full-width-input" data-answer="have you reviewed my mood board|have you reviewed the mood board|have you seen my mood board|have you seen the mood board">
+                    <div class="feedback" data-reason="Use 'Have you + past participle' for recent actions checking status."></div>
+                </div>
+
+                <div class="q-row">
+                    2. A freelancer wants to know if they should send the invoice. Tell them you already paid it.<br>
+                    <input type="text" class="full-width-input" data-answer="i have already paid it|i've already paid it|i have paid it already|i have paid it">
+                    <div class="feedback" data-reason="Use 'have already + past participle' for things done sooner than expected."></div>
+                </div>
+
+                <button class="check-btn" onclick="checkFillInGroup('ex7_2')">Check Answers</button>
+            </div>
+
+            <!-- EXERCISE 7.3: Multiple Choice -->
+            <div class="exercise" id="ex7_3">
+                <div class="ex-title">7.3 Code Review (Spot the error)</div>
+                <p class="context">Select the grammatically correct Slack message to send to the QA team.</p>
+                
+                <div class="mc-options" id="mc7_1">
+                    <button class="mc-btn" data-correct="false" data-explain="Past Simple ('pushed') sounds like a finished past event, but 'yet' requires Present Perfect.">I didn't push the code to staging yet.</button>
+                    <button class="mc-btn" data-correct="true" data-explain="Correct! Present Perfect + 'yet' is used for things we expect to happen.">I haven't pushed the code to staging yet.</button>
+                    <button class="mc-btn" data-correct="false" data-explain="'Haven't push' is wrong. Present Perfect requires the past participle ('pushed').">I haven't push the code to staging yet.</button>
+                </div>
+                <button class="check-btn" onclick="checkMCGroup('mc7_1')">Check Answer</button>
+            </div>
+        </div>
+
+        <!-- ================= UNIT 8 ================= -->
+        <div id="unit-8" class="unit-panel">
+            <h2>Unit 8</h2>
+            <p class="subtitle">Present Perfect vs Past Simple</p>
+            
+            <div class="rule-box">
+                <p>Use <strong>Past Simple</strong> for finished time periods (yesterday, in 2023, last sprint).</p>
+                <p>Use <strong>Present Perfect</strong> for unfinished time periods (today, this week) or when time is not mentioned.</p>
+                <span class="example">"We launched the app in 2022." (Past Simple)</span>
+                <span class="example">"We have launched three features this week." (Present Perfect)</span>
+            </div>
+
+            <!-- EXERCISE 8.1: Fill-in -->
+            <div class="exercise" id="ex8_1">
+                <div class="ex-title">8.1 The Post-Mortem Meeting</div>
+                <p class="context">Fill in the blanks using either Past Simple or Present Perfect.</p>
+                
+                <div class="q-row">
+                    1. "We 
+                    <input type="text" data-answer="lost" placeholder="lose"> 
+                    three major clients last quarter because of the bugs."
+                    <div class="feedback" data-reason="'Last quarter' is a finished time period -> Past Simple."></div>
+                </div>
+                
+                <div class="q-row">
+                    2. "Yes, but since we hired Andrii, the server 
+                    <input type="text" data-answer="has not crashed|hasn't crashed" placeholder="not / crash"> 
+                    once."
+                    <div class="feedback" data-reason="'Since' indicates time from the past until now -> Present Perfect."></div>
+                </div>
+
+                <div class="q-row">
+                    3. "I 
+                    <input type="text" data-answer="spoke" placeholder="speak"> 
+                    to the investors yesterday, and they were happy."
+                    <div class="feedback" data-reason="'Yesterday' is finished -> Past Simple ('spoke' is irregular)."></div>
+                </div>
+
+                <button class="check-btn" onclick="checkFillInGroup('ex8_1')">Check Answers</button>
+            </div>
+
+            <!-- EXERCISE 8.2: Email Correction -->
+            <div class="exercise" id="ex8_2">
+                <div class="ex-title">8.2 Client Email Correction</div>
+                <p class="context">The junior account manager wrote an email. Rewrite the underlined part if it's wrong, or type "correct" if it's fine.</p>
+
+                <div class="q-row">
+                    1. "As requested, <u>I have sent</u> the proposal to your team yesterday afternoon."<br>
+                    <input type="text" class="full-width-input" data-answer="i sent|sent">
+                    <div class="feedback" data-reason="'Yesterday afternoon' requires Past Simple."></div>
+                </div>
+
+                <div class="q-row">
+                    2. "We <u>didn't receive</u> any feedback on the logo designs yet."<br>
+                    <input type="text" class="full-width-input" data-answer="we have not received|haven't received|have not received">
+                    <div class="feedback" data-reason="'Yet' refers to time up to now, requiring Present Perfect."></div>
+                </div>
+
+                <div class="q-row">
+                    3. "<u>Have you seen</u> the new UI components Leo added this morning?" (It is still morning)<br>
+                    <input type="text" class="full-width-input" data-answer="correct|yes|fine">
+                    <div class="feedback" data-reason="Since it is still morning (unfinished time), Present Perfect is correct."></div>
+                </div>
+
+                <button class="check-btn" onclick="checkFillInGroup('ex8_2')">Check Answers</button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Global tracking
+    let totalFields = 0;
+    let correctFields = 0;
+
+    // Initialization: Count total assessable items
+    document.addEventListener("DOMContentLoaded", () => {
+        totalFields = document.querySelectorAll('input[type="text"]').length + 
+                      document.querySelectorAll('.mc-options').length;
+        
+        // Setup MC click events
+        document.querySelectorAll('.mc-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if(this.parentElement.hasAttribute('data-locked')) return;
+                // clear siblings
+                Array.from(this.parentElement.children).forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+    });
+
+    // Tab Switching
+    function showUnit(unitNum) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        document.querySelectorAll('.unit-panel').forEach(panel => panel.classList.remove('active'));
+        document.getElementById(`unit-${unitNum}`).classList.add('active');
+        window.scrollTo(0,0);
+    }
+
+    // Smart Normalization
+    function normalize(str) {
+        if (!str) return "";
+        let s = str.toLowerCase().trim();
+        s = s.replace(/['`’]/g, "'"); // unify apostrophes
+        s = s.replace(/\s+/g, " "); // collapse spaces
+        s = s.replace(/[.,!?;:]+$/g, ""); // strip trailing punctuation
+        
+        // Contraction Expansion Map
+        const map = {
+            "don't": "do not", "didn't": "did not", "doesn't": "does not",
+            "isn't": "is not", "aren't": "are not", "wasn't": "was not", "weren't": "were not",
+            "i'm": "i am", "it's": "it is", "they're": "they are", "we're": "we are",
+            "you're": "you are", "he's": "he is", "she's": "she is", 
+            "won't": "will not", "can't": "cannot", "haven't": "have not", "hasn't": "has not",
+            "hadn't": "had not", "i've": "i have", "you've": "you have", "we've": "we have",
+            "they've": "they have", "u": "you"
+        };
+        
+        let words = s.split(" ");
+        words = words.map(w => map[w] || w);
+        return words.join(" ");
+    }
+
+    // Subsequence Match Checker
+    function isSequenceMatch(userStr, ansStr) {
+        let uWords = normalize(userStr).split(" ");
+        let aWords = normalize(ansStr).split(" ");
+        
+        if (aWords.length === 0 || aWords[0] === "") return false;
+        if (uWords.length < aWords.length) return false;
+        
+        for (let i = 0; i <= uWords.length - aWords.length; i++) {
+            let match = true;
+            for (let j = 0; j < aWords.length; j++) {
+                if (uWords[i+j] !== aWords[j]) { match = false; break; }
+            }
+            if (match) return true;
+        }
+        return false;
+    }
+
+    // Levenshtein Distance for "Close but wrong"
+    function levenshtein(a, b) {
+        const matrix = [];
+        for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+        for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+        
+        for (let i = 1; i <= b.length; i++) {
+            for (let j = 1; j <= a.length; j++) {
+                if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
+                } else {
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j - 1] + 1, // substitution
+                        Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1) // insert/delete
+                    );
+                }
+            }
+        }
+        return matrix[b.length][a.length];
+    }
+
+    function updateScore() {
+        let percent = Math.round((correctFields / totalFields) * 100) || 0;
+        let badge = document.getElementById('score-badge');
+        badge.textContent = `Score: ${percent}%`;
+        if (percent >= 80) badge.classList.add('passing');
+        else badge.classList.remove('passing');
+    }
+
+    // Check Fill-In Exercise Group
+    function checkFillInGroup(groupId) {
+        const container = document.getElementById(groupId);
+        const inputs = container.querySelectorAll('input[type="text"]');
+        let allDone = true;
+
+        inputs.forEach(input => {
+            if (input.readOnly) return; // already successfully checked
+            let val = input.value;
+            let answers = input.dataset.answer.split('|');
+            let feedback = input.nextElementSibling;
+            let reasonStr = feedback.dataset.reason ? `<span class="reason">💡 ${feedback.dataset.reason}</span>` : "";
+
+            if (!val.trim()) {
+                feedback.className = "feedback error";
+                feedback.textContent = "Please fill in this field.";
+                allDone = false;
+                return;
+            }
+
+            let isCorrect = false;
+            let isClose = false;
+            let bestAnswer = answers[0]; // default display answer
+
+            for (let ans of answers) {
+                if (isSequenceMatch(val, ans)) {
+                    isCorrect = true; break;
+                }
+                if (levenshtein(normalize(val), normalize(ans)) <= 3) {
+                    isClose = true;
+                }
+            }
+
+            if (isCorrect) {
+                input.readOnly = true;
+                feedback.className = "feedback success";
+                feedback.innerHTML = `✓ Correct! ${reasonStr}`;
+                correctFields++;
+            } else if (isClose) {
+                feedback.className = "feedback hint";
+                feedback.innerHTML = "Almost! Check spelling or apostrophes.";
+                allDone = false;
+            } else {
+                input.readOnly = true;
+                feedback.className = "feedback error";
+                feedback.innerHTML = `✗ <s>${val}</s> → <span class="correct-ans">${bestAnswer}</span> ${reasonStr}`;
+                // Marked wrong, locked, don't increment score
+            }
+        });
+
+        if (allDone) {
+            container.querySelector('.check-btn').disabled = true;
+            container.querySelector('.check-btn').textContent = "Completed";
+        }
+        updateScore();
+    }
+
+    // Check Multiple Choice Group
+    function checkMCGroup(groupId) {
+        const container = document.getElementById(groupId);
+        if (container.hasAttribute('data-locked')) return;
+
+        const selected = container.querySelector('.mc-btn.selected');
+        const btn = container.nextElementSibling; // check button
+
+        if (!selected) {
+            alert("Please select an option first.");
+            return;
+        }
+
+        container.setAttribute('data-locked', 'true');
+        btn.disabled = true;
+        btn.textContent = "Completed";
+
+        const isCorrect = selected.dataset.correct === "true";
+        const explanation = selected.dataset.explain;
+
+        if (isCorrect) {
+            selected.classList.add('correct');
+            selected.innerHTML += `<div class="feedback success" style="margin-top:8px">✓ ${explanation}</div>`;
+            correctFields++;
+        } else {
+            selected.classList.add('wrong');
+            selected.innerHTML += `<div class="feedback error" style="margin-top:8px">✗ ${explanation}</div>`;
+            
+            // Show correct answer
+            let correctBtn = container.querySelector('[data-correct="true"]');
+            correctBtn.classList.add('correct');
+        }
+
+        updateScore();
+    }
+</script>
+
+</body>
+</html>
