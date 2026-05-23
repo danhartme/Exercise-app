@@ -1,553 +1,454 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Technical ESL Grammar Engine</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Grammar Engine</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+      --bg: #F9FAFB;
+      --card-bg: #FFFFFF;
+      --text-main: #111827;
+      --text-muted: #6B7280;
+      --primary: #3B82F6;
+      --primary-hover: #2563EB;
+      --success: #10B981;
+      --error: #EF4444;
+      --border: #E5E7EB;
+      --mono: 'DM Mono', monospace;
+      --sans: 'Inter', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    body {
+      font-family: var(--sans);
+      background-color: var(--bg);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      padding: 1rem;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
 
-    <style>
-        :root {
-            /* Design Tokens */
-            --ink: #111111;
-            --paper: #FAFAFA;
-            --surface: #F4F4F2;
-            --accent: #2A7F7F;
-            --error: #C84B31;
-            --warning: #D4A017;
-            --success: #2D6A4F;
-            --muted: #707070;
-            --shadow: rgba(17, 17, 17, 0.08);
+    #app-container {
+      width: 100%;
+      max-width: 500px;
+      margin-top: 2rem;
+    }
 
-            /* Typography */
-            --font-ui: 'DM Sans', sans-serif;
-            --font-code: 'DM Mono', monospace;
-            --font-header: 'Playfair Display', serif;
-        }
+    .progress-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 4px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
 
-        body {
-            font-family: var(--font-ui);
-            background-color: var(--paper);
-            color: var(--ink);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      border: 1px solid var(--border);
+    }
 
-        header {
-            padding: 2rem 1.5rem;
-            max-width: 900px;
-            margin: 0 auto;
-            border-bottom: 1px solid var(--surface);
-            margin-bottom: 2rem;
-        }
+    .instruction {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
 
-        header h1 {
-            font-family: var(--font-header);
-            font-weight: 700;
-            font-size: 2rem;
-            color: var(--ink);
-            margin-bottom: 0.5rem;
-        }
+    /* 1. Fill In Styles */
+    .fill-in-container {
+      font-size: 1.125rem;
+      line-height: 1.8;
+    }
+    .fill-in-input {
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--primary);
+      border: none;
+      border-bottom: 2px solid var(--border);
+      background: #F3F4F6;
+      padding: 0.25rem 0.5rem;
+      margin: 0 0.25rem;
+      border-radius: 4px 4px 0 0;
+      width: 140px;
+      text-align: center;
+      transition: all 0.2s;
+      outline: none;
+    }
+    .fill-in-input:focus {
+      border-bottom-color: var(--primary);
+      background: #EFF6FF;
+    }
+    .fill-in-input.correct { border-bottom-color: var(--success); color: var(--success); background: #ECFDF5; }
+    .fill-in-input.incorrect { border-bottom-color: var(--error); color: var(--error); background: #FEF2F2; }
 
-        header p {
-            color: var(--muted);
-            font-size: 1.1rem;
-        }
+    /* 2. Multiple Choice Styles */
+    .mc-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .mc-option {
+      padding: 1rem;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: transparent;
+      font-family: var(--sans);
+      font-size: 1rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text-main);
+    }
+    .mc-option:active { transform: scale(0.98); }
+    .mc-option.selected { border-color: var(--primary); background: #EFF6FF; }
+    .mc-option.correct { border-color: var(--success); background: #ECFDF5; color: #065F46; }
+    .mc-option.incorrect { border-color: var(--error); background: #FEF2F2; color: #991B1B; }
 
-        main {
-            padding: 0 1.5rem 4rem 1.5rem;
-            max-width: 900px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
+    /* 3. Word Order Styles */
+    .word-pool {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      min-height: 50px;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: #F9FAFB;
+      border-radius: 12px;
+      border: 1px dashed var(--border);
+    }
+    .word-pill {
+      padding: 0.5rem 1rem;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      transition: transform 0.1s;
+    }
+    .word-pill:active { transform: scale(0.95); }
+    .word-built {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      min-height: 60px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .word-built .word-pill { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* Mobile-First Card Layout */
-        .card {
-            background-color: #ffffff;
-            border: 1px solid var(--surface);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 12px var(--shadow);
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-            transition: all 0.3s ease;
-        }
+    /* Controls & Feedback */
+    .btn {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 12px;
+      font-family: var(--sans);
+      font-size: 1rem;
+      font-weight: 600;
+      color: white;
+      background: var(--primary);
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 2rem;
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn:active:not(:disabled) { transform: scale(0.98); }
 
-        .scenario-badge {
-            display: inline-flex;
-            background: var(--surface);
-            color: var(--accent);
-            font-family: var(--font-code);
-            font-size: 0.85rem;
-            font-weight: 500;
-            padding: 0.25rem 0.75rem;
-            border-radius: 99px;
-            align-self: flex-start;
-        }
-
-        .prompt {
-            font-size: 1.1rem;
-            font-weight: 400;
-            color: var(--ink);
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        input[type="text"] {
-            font-family: var(--font-code);
-            font-size: 1rem;
-            min-height: 48px;
-            padding: 0 1rem;
-            border: 2px solid var(--surface);
-            border-radius: 6px;
-            color: var(--ink);
-            background: var(--paper);
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-            width: 100%;
-        }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(42, 127, 127, 0.1);
-        }
-
-        input[type="text"]:read-only {
-            background: var(--surface);
-            cursor: not-allowed;
-            color: var(--muted);
-        }
-
-        button {
-            font-family: var(--font-ui);
-            font-weight: 700;
-            font-size: 1rem;
-            min-height: 48px;
-            min-width: 48px;
-            padding: 0 1.5rem;
-            border: none;
-            border-radius: 6px;
-            background-color: var(--ink);
-            color: var(--paper);
-            cursor: pointer;
-            transition: transform 0.1s ease, background-color 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        button:hover {
-            background-color: var(--muted);
-        }
-
-        button:disabled {
-            background-color: var(--surface);
-            color: var(--muted);
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .feedback {
-            display: none;
-            padding: 1rem;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            line-height: 1.5;
-            animation: fadeIn 0.3s ease-out forwards;
-        }
-
-        .feedback strong {
-            font-family: var(--font-code);
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        /* States */
-        .card.state-success { border-color: var(--success); }
-        .card.state-success .feedback {
-            display: block;
-            background: rgba(45, 106, 79, 0.1);
-            color: var(--success);
-        }
-        
-        .card.state-success-hint { border-color: var(--success); }
-        .card.state-success-hint .feedback {
-            display: block;
-            background: rgba(45, 106, 79, 0.1);
-            color: var(--success);
-            border-left: 4px solid var(--success);
-        }
-
-        .card.state-warning { border-color: var(--warning); }
-        .card.state-warning .feedback {
-            display: block;
-            background: rgba(212, 160, 23, 0.1);
-            color: #A37A11;
-        }
-
-        .card.state-error { border-color: var(--error); }
-        .card.state-error .feedback {
-            display: block;
-            background: rgba(200, 75, 49, 0.1);
-            color: var(--error);
-        }
-        .card.state-error input[type="text"] {
-            border-color: var(--error);
-            color: var(--error);
-            text-decoration: line-through;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Desktop Grid Layout (>= 768px) */
-        @media (min-width: 768px) {
-            .card {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 2rem;
-                align-items: start;
-                padding: 2rem;
-            }
-            .card-header {
-                grid-column: 1 / 2;
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
-            }
-            .card-interaction {
-                grid-column: 2 / 3;
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
-            }
-            .input-group {
-                flex-direction: row;
-                align-items: stretch;
-            }
-            .input-group button {
-                flex-shrink: 0;
-            }
-        }
-    </style>
+    .feedback {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      display: none;
+      animation: slideDown 0.3s ease forwards;
+    }
+    .feedback.success { display: block; background: #ECFDF5; border: 1px solid #A7F3D0; color: #065F46; }
+    .feedback.error { display: block; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; }
+    
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+    .shake { animation: shake 0.3s; }
+  </style>
 </head>
 <body>
 
-    <header>
-        <h1>Engineering Contextual Grammar</h1>
-        <p>Unit 4: Advanced Tense Dynamics & Situational Communication</p>
-    </header>
+  <!-- THE DATA NODE -->
+  <script type="application/json" id="exercise-data">
+    [
+      {
+        "type": "fill_in",
+        "instruction": "Present Continuous (Ongoing Action)",
+        "text_before": "We",
+        "text_after": "the Midjourney API into our design system this week.",
+        "hint_verb": "integrate",
+        "accepted_answers": ["are integrating", "re integrating", "'re integrating"],
+        "explanation": "Use the Present Continuous for an action happening around the time of speaking/this week."
+      },
+      {
+        "type": "multiple_choice",
+        "instruction": "Past Simple vs. Present Perfect",
+        "text_before": "I",
+        "text_after": "the report to the client yesterday.",
+        "options": ["have sent", "sent", "was sending"],
+        "correct_answer": "sent",
+        "explanation": "Use the Past Simple ('sent') because the time marker 'yesterday' indicates a finished time period in the past."
+      },
+      {
+        "type": "word_order",
+        "instruction": "Present Perfect Continuous Question",
+        "words": ["long", "working", "have", "you", "been", "how", "here?"],
+        "correct_order": ["how", "long", "have", "you", "been", "working", "here?"],
+        "explanation": "Question structure: Wh-word (How long) + auxiliary (have) + subject (you) + been + verb-ing (working)."
+      }
+    ]
+  </script>
 
-    <main id="app-root"></main>
+  <div id="app-container">
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    
+    <div class="card">
+      <div class="instruction" id="instruction">Loading...</div>
+      <div id="exercise-canvas"></div>
+      
+      <div id="feedback" class="feedback"></div>
+      <button id="action-btn" class="btn">Check Answer</button>
+    </div>
+  </div>
 
-    <!-- DATA-DRIVEN CORE: Single Source of Truth -->
-    <script type="application/json" id="exercise-data">
-        [
-            {
-                "id": "ex_01",
-                "concept": "Present Perfect Continuous",
-                "prompt": "You are currently updating the CTO on your crypto arbitrage bot. You began refactoring the Go backend engine three hours ago, and the work is actively ongoing right now. What do you say?",
-                "targetAnswers": [
-                    "I have been refactoring the Go engine",
-                    "I am refactoring the Go engine",
-                    "I've been refactoring the Go engine"
-                ],
-                "explanation": "Use the Present Perfect Continuous to emphasize the continuous duration of an action that started in the past and is still ongoing.",
-                "properNouns": ["Go", "CTO"]
-            },
-            {
-                "id": "ex_02",
-                "concept": "Auxiliary Verb Base Form",
-                "prompt": "Fix the broken error handling message sent by a junior engineer in Slack:\n'The automated pipeline didn't built the asset library components correctly.'",
-                "targetAnswers": [
-                    "The automated pipeline didn't build the asset library components correctly",
-                    "The automated pipeline did not build the asset library components correctly"
-                ],
-                "explanation": "After an auxiliary negative like 'did not' or 'didn't', you must use the bare base infinitive form ('build') instead of forcing a past tense inflected verb form ('built').",
-                "properNouns": ["Slack"]
-            },
-            {
-                "id": "ex_03",
-                "concept": "Future in the Past",
-                "prompt": "During yesterday's sprint retrospective, Elena mentioned her original plan for the LLM token limits before the API constraints changed. She intended to increase the context window.",
-                "targetAnswers": [
-                    "She was going to increase the context window",
-                    "She intended to increase the context window",
-                    "She planned to increase the context window"
-                ],
-                "explanation": "When discussing past intentions or plans that were established before conditions changed, use 'was/were going to' + base verb.",
-                "properNouns": ["Elena", "LLM", "API"]
-            },
-            {
-                "id": "ex_04",
-                "concept": "Passive Voice Context",
-                "prompt": "Oksana is asking what happened to the old typography system. Inform her that it was removed by the design operations team last week.",
-                "targetAnswers": [
-                    "It was removed by the design operations team last week",
-                    "It was deprecated by the design operations team last week",
-                    "The old typography system was removed by the design operations team last week"
-                ],
-                "explanation": "Use the passive voice ('was removed') when the structural focus is on the object experiencing the action rather than the actor performing it.",
-                "properNouns": ["Oksana"]
-            },
-            {
-                "id": "ex_05",
-                "concept": "Third Conditional Form",
-                "prompt": "Reflect on a failed launch: If Andrii had implemented the A/B testing framework, the user drop-off rate wouldn't have spiked to 40%.",
-                "targetAnswers": [
-                    "If Andrii had implemented the A/B testing framework, the user drop-off rate wouldn't have spiked to 40%",
-                    "If Andrii had implemented the A/B testing framework the user drop-off rate would not have spiked to 40%"
-                ],
-                "explanation": "The third conditional requires 'If + past perfect (had implemented), ... would have + past participle (would not have spiked)' to describe hypothetical past outcomes.",
-                "properNouns": ["Andrii", "A/B"]
-            }
-        ]
-    </script>
+  <script>
+    class GrammarEngine {
+      constructor() {
+        this.data = JSON.parse(document.getElementById('exercise-data').textContent);
+        this.currentIndex = 0;
+        
+        // DOM Elements
+        this.canvas = document.getElementById('exercise-canvas');
+        this.instruction = document.getElementById('instruction');
+        this.actionBtn = document.getElementById('action-btn');
+        this.feedback = document.getElementById('feedback');
+        this.progressBar = document.getElementById('progress');
+        
+        // State
+        this.state = {};
+        this.isAnswered = false;
+        
+        this.actionBtn.addEventListener('click', () => this.handleAction());
+        this.renderExercise();
+      }
 
-    <!-- ENGINE RUNTIME LOGIC -->
-    <script>
-        const GrammarEngine = {
-            data: [],
-            
-            init() {
-                try {
-                    const rawData = document.getElementById('exercise-data').textContent;
-                    this.data = JSON.parse(rawData);
-                    this.renderUI();
-                } catch (error) {
-                    console.error("Critical Engine Error: Failed to parse exercise-data JSON payload.", error);
-                }
-            },
+      renderExercise() {
+        this.isAnswered = false;
+        this.state = {};
+        this.feedback.className = 'feedback';
+        this.feedback.innerHTML = '';
+        this.actionBtn.textContent = 'Check Answer';
+        
+        const ex = this.data[this.currentIndex];
+        this.instruction.textContent = ex.instruction;
+        this.progressBar.style.width = `${(this.currentIndex / this.data.length) * 100}%`;
 
-            // Phase A: Normalization Pipeline
-            normalize(str) {
-                let s = str;
-                // 1. Quote Cleanse
-                s = s.replace(/[`‘’]/g, "'");
-                // 2. Noise Stripping (Trailing punctuation & Conversational filler)
-                s = s.replace(/[.,!?;:]+$/, "");
-                s = s.replace(/^(please|well|hi|hey|so|listen)[,\s]+/i, "");
-                // 3. Contraction Expansion
-                const contractions = {
-                    "don't": "do not", "won't": "will not", "can't": "cannot",
-                    "it's": "it is", "didn't": "did not", "i'm": "i am",
-                    "i've": "i have", "i'll": "i will", "wouldn't": "would not",
-                    "couldn't": "could not", "shouldn't": "should not",
-                    "aren't": "are not", "isn't": "is not", "they're": "they are",
-                    "we're": "we are", "you're": "you are"
-                };
-                for (const [contracted, expanded] of Object.entries(contractions)) {
-                    const regex = new RegExp(`\\b${contracted}\\b`, "gi");
-                    s = s.replace(regex, expanded);
-                }
-                // 4. Dialect Uniformity (UK -> US defaults)
-                s = s.replace(/ise\b/g, "ize")
-                     .replace(/our\b/g, "or")
-                     .replace(/yse\b/g, "yze");
-                
-                return s.trim().toLowerCase();
-            },
+        this.canvas.innerHTML = '';
 
-            // Levenshtein Matrix Calculation
-            calculateLevenshtein(a, b) {
-                const matrix = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
-                for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
-                for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+        if (ex.type === 'fill_in') this.renderFillIn(ex);
+        if (ex.type === 'multiple_choice') this.renderMultipleChoice(ex);
+        if (ex.type === 'word_order') this.renderWordOrder(ex);
+      }
 
-                for (let i = 1; i <= a.length; i++) {
-                    for (let j = 1; j <= b.length; j++) {
-                        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-                        matrix[i][j] = Math.min(
-                            matrix[i - 1][j] + 1,      // deletion
-                            matrix[i][j - 1] + 1,      // insertion
-                            matrix[i - 1][j - 1] + cost // substitution
-                        );
-                    }
-                }
-                return matrix[a.length][b.length];
-            },
+      // --- RENDERERS ---
 
-            // Phase B: Sequence Evaluation Matrix
-            evaluateSequence(inputStr, index) {
-                if (!inputStr.trim()) return null;
+      renderFillIn(ex) {
+        const container = document.createElement('div');
+        container.className = 'fill-in-container';
+        
+        container.innerHTML = `
+          <span>${ex.text_before}</span>
+          <input type="text" id="fill-input" class="fill-in-input" placeholder="(${ex.hint_verb})" autocomplete="off" autocorrect="off" autocapitalize="none">
+          <span>${ex.text_after}</span>
+        `;
+        this.canvas.appendChild(container);
+        
+        const input = document.getElementById('fill-input');
+        // Auto-resize input loosely based on content
+        input.addEventListener('input', (e) => {
+          e.target.style.width = Math.max(140, e.target.value.length * 12) + 'px';
+        });
+      }
 
-                const ex = this.data[index];
-                const normalizedInput = this.normalize(inputStr);
-                const inputTokens = normalizedInput.split(/\s+/);
-                
-                let bestMatchStatus = 'error';
-                let bestMatchTarget = null;
-                let lowestDistance = Infinity;
+      renderMultipleChoice(ex) {
+        const container = document.createElement('div');
+        container.className = 'fill-in-container';
+        container.innerHTML = `<span>${ex.text_before}</span> <strong>_______</strong> <span>${ex.text_after}</span>`;
+        
+        const optionsContainer = document.createElement('div');
+        optionsContainer.className = 'mc-container';
 
-                for (let target of ex.targetAnswers) {
-                    const normalizedTarget = this.normalize(target);
-                    const targetTokens = normalizedTarget.split(/\s+/);
-                    
-                    // Exact Match Validation
-                    if (normalizedInput === normalizedTarget) {
-                        bestMatchStatus = 'success';
-                        
-                        // Check Proper Noun Capitalization
-                        if (ex.properNouns) {
-                            for (let noun of ex.properNouns) {
-                                // If the original input contains the lowercase version, but not the properly capitalized one
-                                if (inputStr.includes(noun.toLowerCase()) && !inputStr.includes(noun)) {
-                                    bestMatchStatus = 'success-hint';
-                                    break;
-                                }
-                            }
-                        }
-                        bestMatchTarget = target;
-                        break; // Stop checking, perfect match found
-                    }
+        ex.options.forEach((opt) => {
+          const btn = document.createElement('button');
+          btn.className = 'mc-option';
+          btn.textContent = opt;
+          btn.onclick = () => {
+            if (this.isAnswered) return;
+            document.querySelectorAll('.mc-option').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            this.state.selectedOption = opt;
+          };
+          optionsContainer.appendChild(btn);
+        });
 
-                    // Warning condition evaluation
-                    if (inputTokens.length === targetTokens.length) {
-                        const distance = this.calculateLevenshtein(normalizedInput, normalizedTarget);
-                        if (distance <= 3 && distance < lowestDistance) {
-                            lowestDistance = distance;
-                            bestMatchStatus = 'warning';
-                            bestMatchTarget = target;
-                        }
-                    }
-                }
+        this.canvas.appendChild(container);
+        this.canvas.appendChild(optionsContainer);
+      }
 
-                return {
-                    status: bestMatchStatus,
-                    correctTarget: ex.targetAnswers[0], // Provide the primary correct answer for errors
-                    explanation: ex.explanation,
-                    properNouns: ex.properNouns
-                };
-            },
+      renderWordOrder(ex) {
+        this.state.availableWords = [...ex.words].sort(() => Math.random() - 0.5);
+        this.state.builtWords = [];
 
-            // Controller: Execute Validation & DOM State Update
-            checkFieldState(index) {
-                const inputEl = document.getElementById(`input-${index}`);
-                const btnEl = document.getElementById(`btn-${index}`);
-                const cardEl = document.getElementById(`card-${index}`);
-                const feedbackEl = document.getElementById(`feedback-${index}`);
-                
-                const evaluation = this.evaluateSequence(inputEl.value, index);
-                
-                if (!evaluation) return; // Empty input, ignore
+        const builtArea = document.createElement('div');
+        builtArea.className = 'word-built';
+        builtArea.id = 'built-area';
 
-                // Reset states
-                cardEl.className = 'card';
-                btnEl.disabled = true;
+        const poolArea = document.createElement('div');
+        poolArea.className = 'word-pool';
+        poolArea.id = 'pool-area';
 
-                if (evaluation.status === 'success') {
-                    cardEl.classList.add('state-success');
-                    feedbackEl.innerHTML = `✓ Perfect validation.`;
-                    inputEl.readOnly = true;
-                } 
-                else if (evaluation.status === 'success-hint') {
-                    cardEl.classList.add('state-success-hint');
-                    const nouns = evaluation.properNouns.join(', ');
-                    feedbackEl.innerHTML = `✓ Correct grammar. <strong>Style note:</strong> Capitalize proprietary terms or names (e.g., ${nouns}).`;
-                    inputEl.readOnly = true;
-                }
-                else if (evaluation.status === 'warning') {
-                    cardEl.classList.add('state-warning');
-                    feedbackEl.innerHTML = `Almost! Check your spelling or look for a small typo.`;
-                    btnEl.disabled = false; // Re-enable for retry
-                }
-                else {
-                    cardEl.classList.add('state-error');
-                    feedbackEl.innerHTML = `<strong>Correction:</strong> ${evaluation.correctTarget}<br><br>${evaluation.explanation}`;
-                    inputEl.readOnly = true;
-                }
-            },
+        this.canvas.appendChild(builtArea);
+        this.canvas.appendChild(poolArea);
 
-            // DOM Render Engine
-            renderUI() {
-                const root = document.getElementById('app-root');
-                root.innerHTML = ''; // Clear prior mounts
+        this.updateWordOrderUI();
+      }
 
-                this.data.forEach((ex, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.id = `card-${index}`;
+      updateWordOrderUI() {
+        const builtArea = document.getElementById('built-area');
+        const poolArea = document.getElementById('pool-area');
+        builtArea.innerHTML = '';
+        poolArea.innerHTML = '';
 
-                    const header = document.createElement('div');
-                    header.className = 'card-header';
-                    
-                    const badge = document.createElement('div');
-                    badge.className = 'scenario-badge';
-                    badge.textContent = ex.concept;
+        this.state.builtWords.forEach((word, index) => {
+          const pill = document.createElement('div');
+          pill.className = 'word-pill';
+          pill.textContent = word;
+          pill.onclick = () => {
+            if (this.isAnswered) return;
+            this.state.builtWords.splice(index, 1);
+            this.state.availableWords.push(word);
+            this.updateWordOrderUI();
+          };
+          builtArea.appendChild(pill);
+        });
 
-                    const prompt = document.createElement('p');
-                    prompt.className = 'prompt';
-                    prompt.textContent = ex.prompt;
+        this.state.availableWords.forEach((word, index) => {
+          const pill = document.createElement('div');
+          pill.className = 'word-pill';
+          pill.textContent = word;
+          pill.onclick = () => {
+            if (this.isAnswered) return;
+            this.state.availableWords.splice(index, 1);
+            this.state.builtWords.push(word);
+            this.updateWordOrderUI();
+          };
+          poolArea.appendChild(pill);
+        });
+      }
 
-                    header.appendChild(badge);
-                    header.appendChild(prompt);
+      // --- LOGIC EVALUATION ---
 
-                    const interaction = document.createElement('div');
-                    interaction.className = 'card-interaction';
+      handleAction() {
+        if (this.isAnswered) {
+          // Move to next
+          this.currentIndex++;
+          if (this.currentIndex >= this.data.length) {
+            this.canvas.innerHTML = '<div style="text-align:center; padding:2rem;"><h3>🎉 All done!</h3><p>You completed the exercise.</p></div>';
+            this.instruction.style.display = 'none';
+            this.actionBtn.style.display = 'none';
+            this.feedback.style.display = 'none';
+            this.progressBar.style.width = '100%';
+            return;
+          }
+          this.renderExercise();
+          return;
+        }
 
-                    const inputGroup = document.createElement('div');
-                    inputGroup.className = 'input-group';
+        const ex = this.data[this.currentIndex];
+        let isCorrect = false;
 
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.id = `input-${index}`;
-                    input.placeholder = "Construct response...";
-                    input.autocomplete = "off";
-                    input.spellcheck = false;
+        if (ex.type === 'fill_in') {
+          const input = document.getElementById('fill-input');
+          const val = input.value.trim().toLowerCase();
+          if (!val) return this.triggerShake();
+          
+          isCorrect = ex.accepted_answers.map(a => a.toLowerCase()).includes(val);
+          input.classList.add(isCorrect ? 'correct' : 'incorrect');
+          input.disabled = true;
+        } 
+        
+        else if (ex.type === 'multiple_choice') {
+          if (!this.state.selectedOption) return this.triggerShake();
+          
+          isCorrect = this.state.selectedOption === ex.correct_answer;
+          const options = document.querySelectorAll('.mc-option');
+          options.forEach(btn => {
+            if (btn.textContent === ex.correct_answer) btn.classList.add('correct');
+            else if (btn.classList.contains('selected') && !isCorrect) btn.classList.add('incorrect');
+            btn.style.pointerEvents = 'none';
+          });
+        } 
+        
+        else if (ex.type === 'word_order') {
+          if (this.state.availableWords.length > 0) return this.triggerShake();
+          
+          isCorrect = this.state.builtWords.join(' ') === ex.correct_order.join(' ');
+          const builtArea = document.getElementById('built-area');
+          if (!isCorrect) builtArea.classList.add('shake');
+        }
 
-                    const btn = document.createElement('button');
-                    btn.id = `btn-${index}`;
-                    btn.textContent = "Check Answer";
-                    btn.onclick = () => this.checkFieldState(index);
+        this.showFeedback(isCorrect, ex.explanation);
+      }
 
-                    input.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter') this.checkFieldState(index);
-                    });
+      triggerShake() {
+        this.canvas.classList.remove('shake');
+        void this.canvas.offsetWidth; // trigger reflow
+        this.canvas.classList.add('shake');
+      }
 
-                    inputGroup.appendChild(input);
-                    inputGroup.appendChild(btn);
+      showFeedback(isCorrect, explanation) {
+        this.isAnswered = true;
+        this.feedback.className = `feedback ${isCorrect ? 'success' : 'error'}`;
+        
+        if (isCorrect) {
+          this.feedback.innerHTML = `<strong>Correct!</strong><br>${explanation}`;
+          this.actionBtn.textContent = 'Next Exercise';
+        } else {
+          this.feedback.innerHTML = `<strong>Not quite.</strong><br>${explanation}`;
+          this.actionBtn.textContent = 'Got it, Next';
+        }
+      }
+    }
 
-                    const feedback = document.createElement('div');
-                    feedback.className = 'feedback';
-                    feedback.id = `feedback-${index}`;
-
-                    interaction.appendChild(inputGroup);
-                    interaction.appendChild(feedback);
-
-                    card.appendChild(header);
-                    card.appendChild(interaction);
-
-                    root.appendChild(card);
-                });
-            }
-        };
-
-        // Bootstrap the application on mount
-        document.addEventListener('DOMContentLoaded', () => GrammarEngine.init());
-    </script>
+    // Initialize Engine
+    document.addEventListener('DOMContentLoaded', () => {
+      new GrammarEngine();
+    });
+  </script>
 </body>
 </html>
