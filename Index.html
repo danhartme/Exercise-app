@@ -480,7 +480,7 @@
     function normalize(str) {
         if (!str) return "";
         let s = str.toLowerCase().trim();
-        s = s.replace(/['`’]/g, "'"); // unify apostrophes
+        s = s.replace(/['`']/g, "'"); // unify apostrophes
         s = s.replace(/\s+/g, " "); // collapse spaces
         s = s.replace(/[.,!?;:]+$/g, ""); // strip trailing punctuation
         
