@@ -1,454 +1,1447 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Grammar Engine</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600;700&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Grammar in Use — Units 1–3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #fafafa;
+  --surface: #ffffff;
+  --border:  #e4e4e4;
+  --ink:     #111111;
+  --muted:   #888888;
+  --accent:  #0066ff;
+  --success: #16a34a;
+  --error:   #dc2626;
+  --warn:    #b45309;
+  --radius:  8px;
+  --font:    'Inter', system-ui, sans-serif;
+}
 
-    :root {
-      --bg: #F9FAFB;
-      --card-bg: #FFFFFF;
-      --text-main: #111827;
-      --text-muted: #6B7280;
-      --primary: #3B82F6;
-      --primary-hover: #2563EB;
-      --success: #10B981;
-      --error: #EF4444;
-      --border: #E5E7EB;
-      --mono: 'DM Mono', monospace;
-      --sans: 'Inter', sans-serif;
-    }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    body {
-      font-family: var(--sans);
-      background-color: var(--bg);
-      color: var(--text-main);
-      display: flex;
-      justify-content: center;
-      padding: 1rem;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-    }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
 
-    #app-container {
-      width: 100%;
-      max-width: 500px;
-      margin-top: 2rem;
-    }
+/* ── HEADER ── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  gap: 16px;
+}
 
-    .progress-bar {
-      height: 6px;
-      background: var(--border);
-      border-radius: 4px;
-      margin-bottom: 2rem;
-      overflow: hidden;
-    }
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  flex: 1;
+}
 
-    .progress-fill {
-      height: 100%;
-      background: var(--primary);
-      width: 0%;
-      transition: width 0.3s ease;
-    }
+header h1 {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 
-    .card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 2rem 1.5rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-      border: 1px solid var(--border);
-    }
+/* UNIT SELECTOR */
+.unit-selector-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 320px;
+}
 
-    .instruction {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-    }
+#unit-select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  padding: 6px 32px 6px 10px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+}
 
-    /* 1. Fill In Styles */
-    .fill-in-container {
-      font-size: 1.125rem;
-      line-height: 1.8;
-    }
-    .fill-in-input {
-      font-family: var(--mono);
-      font-size: 1rem;
-      color: var(--primary);
-      border: none;
-      border-bottom: 2px solid var(--border);
-      background: #F3F4F6;
-      padding: 0.25rem 0.5rem;
-      margin: 0 0.25rem;
-      border-radius: 4px 4px 0 0;
-      width: 140px;
-      text-align: center;
-      transition: all 0.2s;
-      outline: none;
-    }
-    .fill-in-input:focus {
-      border-bottom-color: var(--primary);
-      background: #EFF6FF;
-    }
-    .fill-in-input.correct { border-bottom-color: var(--success); color: var(--success); background: #ECFDF5; }
-    .fill-in-input.incorrect { border-bottom-color: var(--error); color: var(--error); background: #FEF2F2; }
+#unit-select:focus { border-color: var(--accent); }
 
-    /* 2. Multiple Choice Styles */
-    .mc-container {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-    .mc-option {
-      padding: 1rem;
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      background: transparent;
-      font-family: var(--sans);
-      font-size: 1rem;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.2s;
-      color: var(--text-main);
-    }
-    .mc-option:active { transform: scale(0.98); }
-    .mc-option.selected { border-color: var(--primary); background: #EFF6FF; }
-    .mc-option.correct { border-color: var(--success); background: #ECFDF5; color: #065F46; }
-    .mc-option.incorrect { border-color: var(--error); background: #FEF2F2; color: #991B1B; }
+.select-arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--muted);
+  font-size: 10px;
+}
 
-    /* 3. Word Order Styles */
-    .word-pool {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      min-height: 50px;
-      margin-bottom: 1.5rem;
-      padding: 1rem;
-      background: #F9FAFB;
-      border-radius: 12px;
-      border: 1px dashed var(--border);
-    }
-    .word-pill {
-      padding: 0.5rem 1rem;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      font-size: 1rem;
-      cursor: pointer;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-      transition: transform 0.1s;
-    }
-    .word-pill:active { transform: scale(0.95); }
-    .word-built {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      min-height: 60px;
-      border-bottom: 2px solid var(--border);
-      padding-bottom: 0.5rem;
-      margin-bottom: 1.5rem;
-    }
-    .word-built .word-pill { background: var(--primary); color: white; border-color: var(--primary); }
+/* VARIATION TABS */
+.var-tabs {
+  display: flex;
+  gap: 2px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 3px;
+  flex-shrink: 0;
+}
 
-    /* Controls & Feedback */
-    .btn {
-      width: 100%;
-      padding: 1rem;
-      border: none;
-      border-radius: 12px;
-      font-family: var(--sans);
-      font-size: 1rem;
-      font-weight: 600;
-      color: white;
-      background: var(--primary);
-      cursor: pointer;
-      transition: background 0.2s;
-      margin-top: 2rem;
-    }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn:active:not(:disabled) { transform: scale(0.98); }
+.var-tab {
+  background: none;
+  border: none;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  padding: 4px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
 
-    .feedback {
-      margin-top: 1.5rem;
-      padding: 1rem;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      display: none;
-      animation: slideDown 0.3s ease forwards;
-    }
-    .feedback.success { display: block; background: #ECFDF5; border: 1px solid #A7F3D0; color: #065F46; }
-    .feedback.error { display: block; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; }
-    
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-    .shake { animation: shake 0.3s; }
-  </style>
+.var-tab.active {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+/* SCORE */
+#score-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+  min-width: 48px;
+  text-align: right;
+  transition: color 0.3s;
+}
+
+#score-badge.green { color: var(--success); }
+
+/* ── MAIN ── */
+main {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+}
+
+/* UNIT HEADER */
+.unit-header {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.unit-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.unit-title {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.unit-subtitle {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* RULE BOX */
+.rule-box {
+  background: var(--ink);
+  color: #f0f0f0;
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: 20px;
+}
+
+.rule-box-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.rule-box p {
+  font-size: 14px;
+  color: #d0d0d0;
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.rule-box p:last-child { margin-bottom: 0; }
+
+.rule-box code {
+  display: block;
+  font-family: var(--font);
+  font-size: 13px;
+  color: #a8d8ff;
+  background: rgba(255,255,255,0.05);
+  border-left: 2px solid rgba(168,216,255,0.4);
+  padding: 7px 12px;
+  margin: 8px 0;
+  border-radius: 0 4px 4px 0;
+}
+
+/* REF CARD */
+.ref-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin-bottom: 28px;
+}
+
+.ref-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.ref-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 4px 20px;
+}
+
+.ref-item {
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.ref-item .ref-muted { color: var(--muted); font-size: 12px; margin-left: 4px; }
+
+/* EXERCISE */
+.exercise {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.exercise-head {
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.exercise-type-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.exercise-instruction {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.exercise-body { padding: 18px; }
+
+/* FILL */
+.fill-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 5px;
+  margin-bottom: 14px;
+  font-size: 15px;
+}
+
+.fill-item:last-of-type { margin-bottom: 0; }
+
+.item-num {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  min-width: 18px;
+}
+
+.fill-input {
+  border: none;
+  border-bottom: 1.5px solid var(--border);
+  background: transparent;
+  font-family: var(--font);
+  font-size: 15px;
+  color: var(--ink);
+  padding: 1px 4px;
+  min-width: 90px;
+  width: 140px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.fill-input:focus { border-bottom-color: var(--accent); }
+.fill-input:disabled { color: var(--muted); }
+
+.verb-hint {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* FEEDBACK */
+.feedback {
+  display: none;
+  margin-top: 5px;
+  font-size: 12px;
+  white-space: pre-line;
+  line-height: 1.5;
+  padding: 6px 10px;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.feedback.correct { display:block; color:var(--success); background:rgba(22,163,74,0.07); border-left:2px solid var(--success); }
+.feedback.wrong   { display:block; color:var(--error);   background:rgba(220,38,38,0.06); border-left:2px solid var(--error); }
+.feedback.almost  { display:block; color:var(--warn);    background:rgba(180,83,9,0.07);  border-left:2px solid var(--warn); }
+
+/* CHECK BTN */
+.check-btn {
+  display: inline-flex;
+  align-items: center;
+  background: var(--ink);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  cursor: pointer;
+  margin-top: 14px;
+  transition: opacity 0.15s;
+}
+
+.check-btn:hover { opacity: 0.8; }
+.check-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* MC */
+.mc-item { margin-bottom: 22px; }
+.mc-item:last-child { margin-bottom: 0; }
+.mc-question { font-size: 15px; margin-bottom: 10px; }
+.mc-options { display: flex; flex-direction: column; gap: 5px; }
+
+.mc-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--ink);
+  padding: 9px 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.mc-btn:hover:not(:disabled) { border-color: var(--accent); }
+.mc-btn:disabled { cursor: not-allowed; }
+.mc-btn.correct-mc { background:rgba(22,163,74,0.08); border-color:var(--success); color:var(--success); font-weight:500; }
+.mc-btn.wrong-mc   { background:rgba(220,38,38,0.06); border-color:var(--error); color:var(--error); }
+
+.mc-explain {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: 3px;
+  display: none;
+  padding-left: 4px;
+  line-height: 1.4;
+}
+
+/* PREAMBLE */
+.preamble {
+  background: var(--bg);
+  border-left: 3px solid var(--border);
+  font-size: 13px;
+  line-height: 1.7;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  border-radius: 0 6px 6px 0;
+  white-space: pre-line;
+  color: var(--ink);
+}
+
+/* SITUATIONAL / CORRECTION */
+.prompt-item { margin-bottom: 18px; }
+.prompt-item:last-child { margin-bottom: 0; }
+.prompt-text { font-size: 14px; color: var(--muted); font-style: italic; margin-bottom: 7px; }
+.prompt-text .item-num { font-style: normal; }
+
+.correction-line {
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--bg);
+  padding: 6px 10px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+  line-height: 1.6;
+}
+
+.text-input {
+  border: none;
+  border-bottom: 1.5px solid var(--border);
+  background: transparent;
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--ink);
+  padding: 3px 4px;
+  width: 100%;
+  max-width: 420px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.text-input:focus { border-bottom-color: var(--accent); }
+.text-input:disabled { color: var(--muted); }
+
+/* REORDER */
+.reorder-item { margin-bottom: 24px; }
+.reorder-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+
+.drop-zone, .chip-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  min-height: 42px;
+  padding: 7px;
+  border-radius: 6px;
+}
+
+.drop-zone {
+  background: var(--bg);
+  border: 1.5px dashed var(--border);
+  margin-bottom: 5px;
+}
+
+.chip-bank {
+  background: transparent;
+  border: 1px solid var(--border);
+}
+
+.chip {
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--ink);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  min-height: 32px;
+  transition: background 0.12s, transform 0.08s;
+  user-select: none;
+}
+
+.chip:hover { background: var(--accent); transform: translateY(-1px); }
+.chip.placed { background: var(--accent); }
+.chip:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+.reorder-feedback {
+  font-size: 12px;
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  display: none;
+  white-space: pre-line;
+}
+
+.reorder-feedback.correct { display:block; color:var(--success); background:rgba(22,163,74,0.07); border-left:2px solid var(--success); }
+.reorder-feedback.wrong   { display:block; color:var(--error); background:rgba(220,38,38,0.06); border-left:2px solid var(--error); }
+
+/* PANEL */
+.unit-panel { display: none; }
+.unit-panel.active { display: block; }
+
+.var-panel { display: none; }
+.var-panel.active { display: block; }
+
+@media (max-width: 520px) {
+  header { padding: 0 12px; gap: 10px; }
+  .var-tab { padding: 4px 7px; }
+  main { padding: 20px 14px 60px; }
+}
+</style>
 </head>
 <body>
 
-  <!-- THE DATA NODE -->
-  <script type="application/json" id="exercise-data">
-    [
-      {
-        "type": "fill_in",
-        "instruction": "Present Continuous (Ongoing Action)",
-        "text_before": "We",
-        "text_after": "the Midjourney API into our design system this week.",
-        "hint_verb": "integrate",
-        "accepted_answers": ["are integrating", "re integrating", "'re integrating"],
-        "explanation": "Use the Present Continuous for an action happening around the time of speaking/this week."
-      },
-      {
-        "type": "multiple_choice",
-        "instruction": "Past Simple vs. Present Perfect",
-        "text_before": "I",
-        "text_after": "the report to the client yesterday.",
-        "options": ["have sent", "sent", "was sending"],
-        "correct_answer": "sent",
-        "explanation": "Use the Past Simple ('sent') because the time marker 'yesterday' indicates a finished time period in the past."
-      },
-      {
-        "type": "word_order",
-        "instruction": "Present Perfect Continuous Question",
-        "words": ["long", "working", "have", "you", "been", "how", "here?"],
-        "correct_order": ["how", "long", "have", "you", "been", "working", "here?"],
-        "explanation": "Question structure: Wh-word (How long) + auxiliary (have) + subject (you) + been + verb-ing (working)."
-      }
-    ]
-  </script>
-
-  <div id="app-container">
-    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
-    
-    <div class="card">
-      <div class="instruction" id="instruction">Loading...</div>
-      <div id="exercise-canvas"></div>
-      
-      <div id="feedback" class="feedback"></div>
-      <button id="action-btn" class="btn">Check Answer</button>
+<header>
+  <div class="header-left">
+    <h1>Grammar in Use</h1>
+    <div class="unit-selector-wrap">
+      <select id="unit-select"></select>
+      <span class="select-arrow">▾</span>
     </div>
   </div>
+  <div class="var-tabs" id="var-tabs"></div>
+  <div id="score-badge">0 / 0</div>
+</header>
 
-  <script>
-    class GrammarEngine {
-      constructor() {
-        this.data = JSON.parse(document.getElementById('exercise-data').textContent);
-        this.currentIndex = 0;
-        
-        // DOM Elements
-        this.canvas = document.getElementById('exercise-canvas');
-        this.instruction = document.getElementById('instruction');
-        this.actionBtn = document.getElementById('action-btn');
-        this.feedback = document.getElementById('feedback');
-        this.progressBar = document.getElementById('progress');
-        
-        // State
-        this.state = {};
-        this.isAnswered = false;
-        
-        this.actionBtn.addEventListener('click', () => this.handleAction());
-        this.renderExercise();
-      }
+<main id="main-content"></main>
 
-      renderExercise() {
-        this.isAnswered = false;
-        this.state = {};
-        this.feedback.className = 'feedback';
-        this.feedback.innerHTML = '';
-        this.actionBtn.textContent = 'Check Answer';
-        
-        const ex = this.data[this.currentIndex];
-        this.instruction.textContent = ex.instruction;
-        this.progressBar.style.width = `${(this.currentIndex / this.data.length) * 100}%`;
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
 
-        this.canvas.innerHTML = '';
-
-        if (ex.type === 'fill_in') this.renderFillIn(ex);
-        if (ex.type === 'multiple_choice') this.renderMultipleChoice(ex);
-        if (ex.type === 'word_order') this.renderWordOrder(ex);
-      }
-
-      // --- RENDERERS ---
-
-      renderFillIn(ex) {
-        const container = document.createElement('div');
-        container.className = 'fill-in-container';
-        
-        container.innerHTML = `
-          <span>${ex.text_before}</span>
-          <input type="text" id="fill-input" class="fill-in-input" placeholder="(${ex.hint_verb})" autocomplete="off" autocorrect="off" autocapitalize="none">
-          <span>${ex.text_after}</span>
-        `;
-        this.canvas.appendChild(container);
-        
-        const input = document.getElementById('fill-input');
-        // Auto-resize input loosely based on content
-        input.addEventListener('input', (e) => {
-          e.target.style.width = Math.max(140, e.target.value.length * 12) + 'px';
-        });
-      }
-
-      renderMultipleChoice(ex) {
-        const container = document.createElement('div');
-        container.className = 'fill-in-container';
-        container.innerHTML = `<span>${ex.text_before}</span> <strong>_______</strong> <span>${ex.text_after}</span>`;
-        
-        const optionsContainer = document.createElement('div');
-        optionsContainer.className = 'mc-container';
-
-        ex.options.forEach((opt) => {
-          const btn = document.createElement('button');
-          btn.className = 'mc-option';
-          btn.textContent = opt;
-          btn.onclick = () => {
-            if (this.isAnswered) return;
-            document.querySelectorAll('.mc-option').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            this.state.selectedOption = opt;
-          };
-          optionsContainer.appendChild(btn);
-        });
-
-        this.canvas.appendChild(container);
-        this.canvas.appendChild(optionsContainer);
-      }
-
-      renderWordOrder(ex) {
-        this.state.availableWords = [...ex.words].sort(() => Math.random() - 0.5);
-        this.state.builtWords = [];
-
-        const builtArea = document.createElement('div');
-        builtArea.className = 'word-built';
-        builtArea.id = 'built-area';
-
-        const poolArea = document.createElement('div');
-        poolArea.className = 'word-pool';
-        poolArea.id = 'pool-area';
-
-        this.canvas.appendChild(builtArea);
-        this.canvas.appendChild(poolArea);
-
-        this.updateWordOrderUI();
-      }
-
-      updateWordOrderUI() {
-        const builtArea = document.getElementById('built-area');
-        const poolArea = document.getElementById('pool-area');
-        builtArea.innerHTML = '';
-        poolArea.innerHTML = '';
-
-        this.state.builtWords.forEach((word, index) => {
-          const pill = document.createElement('div');
-          pill.className = 'word-pill';
-          pill.textContent = word;
-          pill.onclick = () => {
-            if (this.isAnswered) return;
-            this.state.builtWords.splice(index, 1);
-            this.state.availableWords.push(word);
-            this.updateWordOrderUI();
-          };
-          builtArea.appendChild(pill);
-        });
-
-        this.state.availableWords.forEach((word, index) => {
-          const pill = document.createElement('div');
-          pill.className = 'word-pill';
-          pill.textContent = word;
-          pill.onclick = () => {
-            if (this.isAnswered) return;
-            this.state.availableWords.splice(index, 1);
-            this.state.builtWords.push(word);
-            this.updateWordOrderUI();
-          };
-          poolArea.appendChild(pill);
-        });
-      }
-
-      // --- LOGIC EVALUATION ---
-
-      handleAction() {
-        if (this.isAnswered) {
-          // Move to next
-          this.currentIndex++;
-          if (this.currentIndex >= this.data.length) {
-            this.canvas.innerHTML = '<div style="text-align:center; padding:2rem;"><h3>🎉 All done!</h3><p>You completed the exercise.</p></div>';
-            this.instruction.style.display = 'none';
-            this.actionBtn.style.display = 'none';
-            this.feedback.style.display = 'none';
-            this.progressBar.style.width = '100%';
-            return;
+const UNITS = [
+  /* ── UNIT 1 ── Present Continuous ── */
+  {
+    id: "unit1",
+    label: "Unit 1 — Present Continuous",
+    title: "Present Continuous",
+    subtitle: "I am doing — actions happening right now or around now",
+    ruleBox: {
+      heading: "Key Rule",
+      lines: [
+        "Use am/is/are + verb‑ing for actions happening at or around now, and for temporary situations.",
+        { code: "Sara is reviewing the Figma prototype right now." },
+        { code: "The team are working on the rebrand this week." },
+        "Also used for arranged future events.",
+        { code: "Leo is flying to Amsterdam on Monday. (already planned)" }
+      ]
+    },
+    refCard: {
+      heading: "Spelling — verb + -ing",
+      items: [
+        { base: "run → running",    note: "double consonant" },
+        { base: "write → writing",  note: "drop final -e" },
+        { base: "plan → planning",  note: "double consonant" },
+        { base: "sit → sitting",    note: "double consonant" },
+        { base: "use → using",      note: "drop final -e" }
+      ]
+    },
+    variations: [
+      /* Variation A */
+      {
+        label: "A",
+        exercises: [
+          {
+            type: "fill", id: "ex1A_1",
+            title: "Fill in the gaps",
+            instruction: "Complete with the present continuous. Verb in brackets — tense is yours.",
+            items: [
+              { id:"f1A_1_1", before:"Marcus", verb:"write", after:"the creative brief for the rebrand — he'll share it after lunch.", answer:"is writing", wrongFeedback:"✗ is writing\n💡 'Marcus' → is + verb-ing. Drop -e before adding -ing.", correctFeedback:"✓ is writing — in progress right now." },
+              { id:"f1A_1_2", before:"The Warsaw team", verb:"run", after:"a two-week sprint on the onboarding flow.", answer:"is running|are running", wrongFeedback:"✗ is/are running\n💡 Double the final consonant (run → running). Both 'is' and 'are' work for a collective noun.", correctFeedback:"✓ running — double the consonant in CVC pattern." },
+              { id:"f1A_1_3", before:"— Where's Natalia? — She", verb:"not / join", after:"the call — her flight landed late.", answer:"is not joining|isn't joining", wrongFeedback:"✗ is not joining\n💡 Negative continuous: is/am/are + not + verb-ing.", correctFeedback:"✓ Negative continuous — is not joining." },
+              { id:"f1A_1_4", before:"Oksana and Daria", verb:"redesign", after:"the component library this month.", answer:"are redesigning", wrongFeedback:"✗ are redesigning\n💡 Plural subject → are. Drop -e before -ing.", correctFeedback:"✓ are redesigning — plural, temporary project." },
+              { id:"f1A_1_5", before:"Andrii", verb:"pitch", after:"the go-to-market strategy to investors in Berlin right now.", answer:"is pitching", wrongFeedback:"✗ is pitching\n💡 'Right now' confirms the action is in progress.", correctFeedback:"✓ is pitching — in progress this moment." },
+              { id:"f1A_1_6", before:"The retrospective", verb:"not / start", after:"until Thursday — check the Linear calendar.", answer:"is not starting|isn't starting", wrongFeedback:"✗ is not starting\n💡 Arranged future: continuous negative = is not + verb-ing.", correctFeedback:"✓ isn't starting — arranged future, negative form." }
+            ]
+          },
+          {
+            type: "mc", id: "ex1A_2",
+            title: "Choose the correct form",
+            instruction: "Select the best answer. The obvious choice is sometimes wrong.",
+            items: [
+              { id:"mc1A_2_1", question:"Tomek is in his third call today. Right now he ___ the pitch results with the client.", options:[
+                { text:"discuss",       correct:false, explain:"Present simple describes a routine, not an action in progress right now." },
+                { text:"is discussing", correct:true,  explain:"✓ 'Right now' = action in progress → present continuous." },
+                { text:"discusses",     correct:false, explain:"Third-person simple describes habits, not this specific moment." }
+              ]},
+              { id:"mc1A_2_2", question:"I usually work from Kyiv, but this month I ___ from Warsaw while the studio is renovated.", options:[
+                { text:"work",       correct:false, explain:"Present simple = permanent habit, not a temporary arrangement." },
+                { text:"am working", correct:true,  explain:"✓ 'This month' + temporary reason = continuous for now." },
+                { text:"worked",     correct:false, explain:"Past simple places this in the past." }
+              ]},
+              { id:"mc1A_2_3", question:"The Webflow preview ___ — can you check the export settings?", options:[
+                { text:"isn't loading",  correct:true,  explain:"✓ Observable problem right now → present continuous negative." },
+                { text:"doesn't load",   correct:false, explain:"Present simple implies a permanent deficiency, not this instant." },
+                { text:"wasn't loading", correct:false, explain:"Past continuous refers to the past, not what we see now." }
+              ]},
+              { id:"mc1A_2_4", question:"Listen — someone ___ in the background on Leo's Loom recording.", options:[
+                { text:"types",     correct:false, explain:"Simple for a habit; we're pointing to a live, audible action." },
+                { text:"is typing", correct:true,  explain:"✓ 'Listen' + evidence of action now = continuous." },
+                { text:"typed",     correct:false, explain:"Past simple — the action is clearly happening now." }
+              ]}
+            ]
+          },
+          {
+            type: "situational", id: "ex1A_3",
+            title: "Form the question",
+            instruction: "Read each situation. Write a natural present continuous question or statement.",
+            items: [
+              { id:"s1A_3_1", prompt:"Leo's Slack status says 'In a meeting.' Message him to ask what he's doing.", answer:"what are you doing|what are you working on|are you in a meeting", wrongFeedback:"✗ What are you doing? / Are you in a meeting?\n💡 Continuous question: What + am/is/are + subject + verb-ing?", correctFeedback:"✓ Present continuous question — well formed." },
+              { id:"s1A_3_2", prompt:"Daria just opened a new Figma file. Ask her what project she's working on.", answer:"what are you working on|what are you designing|are you starting a new project|what are you building", wrongFeedback:"✗ What are you working on? / What are you designing?\n💡 are + you + verb-ing for an action in progress.", correctFeedback:"✓ Great — continuous question for an ongoing action." },
+              { id:"s1A_3_3", prompt:"The new Linear board isn't loading for the whole team. Tell a colleague.", answer:"the linear board isn't working|linear isn't loading|it isn't loading|the board isn't loading", wrongFeedback:"✗ The Linear board isn't loading / isn't working.\n💡 Negative continuous: is + not + verb-ing.", correctFeedback:"✓ isn't + verb-ing — negative continuous for a visible problem." }
+            ]
           }
-          this.renderExercise();
-          return;
-        }
-
-        const ex = this.data[this.currentIndex];
-        let isCorrect = false;
-
-        if (ex.type === 'fill_in') {
-          const input = document.getElementById('fill-input');
-          const val = input.value.trim().toLowerCase();
-          if (!val) return this.triggerShake();
-          
-          isCorrect = ex.accepted_answers.map(a => a.toLowerCase()).includes(val);
-          input.classList.add(isCorrect ? 'correct' : 'incorrect');
-          input.disabled = true;
-        } 
-        
-        else if (ex.type === 'multiple_choice') {
-          if (!this.state.selectedOption) return this.triggerShake();
-          
-          isCorrect = this.state.selectedOption === ex.correct_answer;
-          const options = document.querySelectorAll('.mc-option');
-          options.forEach(btn => {
-            if (btn.textContent === ex.correct_answer) btn.classList.add('correct');
-            else if (btn.classList.contains('selected') && !isCorrect) btn.classList.add('incorrect');
-            btn.style.pointerEvents = 'none';
-          });
-        } 
-        
-        else if (ex.type === 'word_order') {
-          if (this.state.availableWords.length > 0) return this.triggerShake();
-          
-          isCorrect = this.state.builtWords.join(' ') === ex.correct_order.join(' ');
-          const builtArea = document.getElementById('built-area');
-          if (!isCorrect) builtArea.classList.add('shake');
-        }
-
-        this.showFeedback(isCorrect, ex.explanation);
+        ]
+      },
+      /* Variation B */
+      {
+        label: "B",
+        exercises: [
+          {
+            type: "fill", id: "ex1B_1",
+            title: "Fill in the gaps",
+            instruction: "Complete with the present continuous. Verb in brackets.",
+            items: [
+              { id:"f1B_1_1", before:"Sara", verb:"lead", after:"the Amsterdam client workshop this week — she flew in on Sunday.", answer:"is leading", wrongFeedback:"✗ is leading\n💡 Temporary arrangement around now → continuous. 'Sara' → is.", correctFeedback:"✓ is leading — temporary, in progress this week." },
+              { id:"f1B_1_2", before:"Tomek and I", verb:"build", after:"the new investor deck in Notion — we started yesterday.", answer:"are building", wrongFeedback:"✗ are building\n💡 'Tomek and I' = plural → are + verb-ing.", correctFeedback:"✓ are building — plural subject, ongoing task." },
+              { id:"f1B_1_3", before:"— Is the design review starting at 3? — No, it", verb:"not / start", after:"until 4:30.", answer:"is not starting|isn't starting", wrongFeedback:"✗ is not starting\n💡 Arranged event in the near future, negative → is not + verb-ing.", correctFeedback:"✓ isn't starting — arranged future, negative." },
+              { id:"f1B_1_4", before:"The Kyiv team", verb:"migrate", after:"all Miro boards to FigJam before the end of the sprint.", answer:"is migrating|are migrating", wrongFeedback:"✗ is/are migrating\n💡 Current temporary project → continuous.", correctFeedback:"✓ is/are migrating — ongoing temporary task." },
+              { id:"f1B_1_5", before:"— What", verb:"you / do", after:"right now? — I'm finishing the Webflow exports.", answer:"are you doing", wrongFeedback:"✗ are you doing\n💡 Question form: Are/Am/Is + subject + verb-ing?", correctFeedback:"✓ are you doing — standard continuous question." },
+              { id:"f1B_1_6", before:"Natalia", verb:"not / attend", after:"the 9am call — she has a client conflict.", answer:"is not attending|isn't attending", wrongFeedback:"✗ is not attending\n💡 Third person negative continuous: is not + verb-ing.", correctFeedback:"✓ isn't attending — third-person negative continuous." }
+            ]
+          },
+          {
+            type: "correction", id: "ex1B_2",
+            title: "Fix the Slack thread",
+            instruction: "Some lines have a verb form error. Write the corrected form, or 'correct' if the line is fine.",
+            preamble: "Thread: #design-sprint — Tuesday morning",
+            items: [
+              { id:"c1B_2_1", line:"(1) Marcus is presenting the new token system to stakeholders right now.", answer:"correct", wrongFeedback:"✗ This is correct. 'Is presenting' — third-person continuous for an action in progress.", correctFeedback:"✓ Correct — is + verb-ing, action in progress." },
+              { id:"c1B_2_2", line:"(2) Daria and Leo writes the retrospective notes this morning.", answer:"are writing", wrongFeedback:"✗ are writing\n💡 Plural subject in a present, temporary activity → are + verb-ing.", correctFeedback:"✓ are writing — plural continuous." },
+              { id:"c1B_2_3", line:"(3) The onboarding flow is looking great — really clean.", answer:"correct", wrongFeedback:"✗ This is correct. 'Is looking' as an observation right now is acceptable in continuous.", correctFeedback:"✓ Correct — observable quality right now, continuous works." },
+              { id:"c1B_2_4", line:"(4) Oksana redesigns the icon set this week — she's on page 3.", answer:"is redesigning", wrongFeedback:"✗ is redesigning\n💡 'This week' = temporary ongoing task → present continuous, not simple.", correctFeedback:"✓ is redesigning — 'this week' signals a temporary task in progress." },
+              { id:"c1B_2_5", line:"(5) Are we meet to review the A/B results at 2pm?", answer:"are we meeting", wrongFeedback:"✗ are we meeting\n💡 Continuous question form: Are/Am/Is + subject + verb-ing?", correctFeedback:"✓ are we meeting — correct continuous question form." }
+            ]
+          },
+          {
+            type: "reorder", id: "ex1B_3",
+            title: "Build the sentence",
+            instruction: "Tap words to build the sentence. Tap a placed word to return it.",
+            items: [
+              { id:"r1B_3_1", label:"Sentence 1", words:["Sara","is","presenting","the","new","design","system","to","the","board"], answer:"sara is presenting the new design system to the board", wrongFeedback:"✗ Sara is presenting the new design system to the board." },
+              { id:"r1B_3_2", label:"Sentence 2", words:["Are","you","joining","the","Zoom","retrospective","this","afternoon"], answer:"are you joining the zoom retrospective this afternoon", wrongFeedback:"✗ Are you joining the Zoom retrospective this afternoon?" }
+            ]
+          }
+        ]
+      },
+      /* Variation C */
+      {
+        label: "C",
+        exercises: [
+          {
+            type: "mc", id: "ex1C_1",
+            title: "Spot the error",
+            instruction: "Four options — only one is correct. At least one trap included.",
+            items: [
+              { id:"mc1C_1_1", question:"Andrii ___ the Lviv team through the rebrand this quarter — it's a big project.", options:[
+                { text:"is leading",  correct:true,  explain:"✓ A temporary, ongoing project this quarter → present continuous." },
+                { text:"leads",       correct:false, explain:"'Leads' is simple — implies a permanent role. 'This quarter' signals temporary." },
+                { text:"is lead",     correct:false, explain:"'Is lead' is passive, not continuous. Continuous = is + verb-ing." },
+                { text:"leading",     correct:false, explain:"Missing the auxiliary 'is' — you need is/am/are + verb-ing." }
+              ]},
+              { id:"mc1C_1_2", question:"— Why aren't you in the call? — Because I ___ the Figma export and it's taking forever.", options:[
+                { text:"fix",        correct:false, explain:"Base form can't stand alone here — needs am/is/are." },
+                { text:"am fixing",  correct:true,  explain:"✓ An action in progress right now explaining a current situation → continuous." },
+                { text:"fixed",      correct:false, explain:"Past simple — but the speaker is clearly doing this right now." },
+                { text:"am fix",     correct:false, explain:"Ungrammatical — needs the full verb form: am fixing." }
+              ]},
+              { id:"mc1C_1_3", question:"The Warsaw and Kyiv teams ___ on the component audit together this sprint.", options:[
+                { text:"collaborate",     correct:false, explain:"Simple → permanent habit. 'This sprint' marks it as temporary." },
+                { text:"are collaborating", correct:true, explain:"✓ Temporary joint project this sprint → plural continuous." },
+                { text:"is collaborating", correct:false, explain:"Two plural teams → 'are', not 'is'." },
+                { text:"collaborating",   correct:false, explain:"Missing the auxiliary 'are' — needs are + verb-ing." }
+              ]},
+              { id:"mc1C_1_4", question:"Look — the conversion rate ___ already. The new copy must be working.", options:[
+                { text:"improves",     correct:false, explain:"Simple describes a habit or fact. Here we're watching it happen live." },
+                { text:"is improving", correct:true,  explain:"✓ 'Look' + observable change right now = continuous." },
+                { text:"improved",     correct:false, explain:"Past simple — but the change is happening as we watch." },
+                { text:"improve",      correct:false, explain:"Base form — needs is/am/are + verb-ing for a current action." }
+              ]}
+            ]
+          },
+          {
+            type: "situational", id: "ex1C_2",
+            title: "Write the sentence",
+            instruction: "Use present continuous to express the meaning. No word hints.",
+            items: [
+              { id:"s1C_2_1", prompt:"A colleague asks where Leo is. Explain that he's on a flight to Berlin at this moment.", answer:"he is flying to berlin|leo is flying to berlin|he's flying to berlin", wrongFeedback:"✗ He is flying to Berlin.\n💡 Action in progress at this moment — present continuous.", correctFeedback:"✓ is flying — in progress now." },
+              { id:"s1C_2_2", prompt:"You're in the middle of redesigning the onboarding flow. Tell Marcus what you're up to.", answer:"i am redesigning the onboarding flow|i'm redesigning the onboarding flow|i am working on the onboarding flow|i'm working on the onboarding flow", wrongFeedback:"✗ I'm redesigning the onboarding flow.\n💡 Ongoing task right now → am + verb-ing.", correctFeedback:"✓ am redesigning — task in progress." },
+              { id:"s1C_2_3", prompt:"The team has a sprint review scheduled for tomorrow at 10am. State this as an arranged event.", answer:"we are having a sprint review tomorrow|the team is having a sprint review tomorrow|we are meeting for the sprint review tomorrow|we're having a sprint review tomorrow at 10", wrongFeedback:"✗ We're having a sprint review tomorrow at 10am.\n💡 Arranged future events use present continuous.", correctFeedback:"✓ Arranged event in the future — continuous is correct here." }
+            ]
+          },
+          {
+            type: "reorder", id: "ex1C_3",
+            title: "Build the sentence",
+            instruction: "Tap words to build the sentence.",
+            items: [
+              { id:"r1C_3_1", label:"Sentence 1", words:["Oksana","is","not","joining","the","call","today"], answer:"oksana is not joining the call today", wrongFeedback:"✗ Oksana is not joining the call today." },
+              { id:"r1C_3_2", label:"Sentence 2", words:["They","are","migrating","all","their","Miro","boards","to","FigJam"], answer:"they are migrating all their miro boards to figjam", wrongFeedback:"✗ They are migrating all their Miro boards to FigJam." }
+            ]
+          }
+        ]
       }
+    ]
+  },
 
-      triggerShake() {
-        this.canvas.classList.remove('shake');
-        void this.canvas.offsetWidth; // trigger reflow
-        this.canvas.classList.add('shake');
+  /* ── UNIT 2 ── Present Simple ── */
+  {
+    id: "unit2",
+    label: "Unit 2 — Present Simple",
+    title: "Present Simple",
+    subtitle: "I do — habits, routines, facts, and permanent situations",
+    ruleBox: {
+      heading: "Key Rule",
+      lines: [
+        "Use present simple for habits, routines, facts, and permanent situations.",
+        { code: "Andrii runs the weekly design review every Monday." },
+        { code: "The Kyiv studio uses Figma for all component work." },
+        "Third person singular (he/she/it) adds -s/-es. Questions and negatives use do/does.",
+        { code: "Does she know? — He doesn't attend stand-ups." }
+      ]
+    },
+    refCard: {
+      heading: "Third-person -s spelling",
+      items: [
+        { base: "work → works",      note: "add -s" },
+        { base: "finish → finishes", note: "add -es after -sh/-ch/-s/-x/-z" },
+        { base: "go → goes",         note: "add -es" },
+        { base: "study → studies",   note: "-y → -ies" },
+        { base: "have → has",        note: "irregular" }
+      ]
+    },
+    variations: [
+      /* Variation A */
+      {
+        label: "A",
+        exercises: [
+          {
+            type: "fill", id: "ex2A_1",
+            title: "Fill in the gaps",
+            instruction: "Complete with the correct present simple form. Use the verb in brackets.",
+            items: [
+              { id:"f2A_1_1", before:"Natalia", verb:"manage", after:"all client relationships for the Berlin studio — she's been there since 2022.", answer:"manages", wrongFeedback:"✗ manages\n💡 Third-person singular adds -s. Permanent role → simple.", correctFeedback:"✓ manages — third-person -s for a permanent role." },
+              { id:"f2A_1_2", before:"The conversion rate", verb:"not / improve", after:"unless we A/B test the onboarding copy first.", answer:"does not improve|doesn't improve", wrongFeedback:"✗ doesn't improve\n💡 Third-person negative: does not + base verb (no -s on main verb).", correctFeedback:"✓ doesn't improve — correct third-person negative." },
+              { id:"f2A_1_3", before:"Marcus", verb:"review", after:"every pull request before it goes live — he never skips it.", answer:"reviews", wrongFeedback:"✗ reviews\n💡 Consistent personal habit → simple. Third person → -s.", correctFeedback:"✓ reviews — routine action, third-person -s." },
+              { id:"f2A_1_4", before:"— How often", verb:"the Warsaw team / present", after:"an investor update? — Once a quarter.", answer:"does the warsaw team present|do the warsaw team present", wrongFeedback:"✗ does the Warsaw team present\n💡 Questions: Does/Do + subject + base verb (no -s).", correctFeedback:"✓ Does … present — base verb after auxiliary." },
+              { id:"f2A_1_5", before:"Leo", verb:"not / attend", after:"stand-ups on Fridays — he blocks that time for deep work.", answer:"does not attend|doesn't attend", wrongFeedback:"✗ doesn't attend\n💡 He/She/It → does not + base verb for negatives.", correctFeedback:"✓ doesn't attend — third-person negative." },
+              { id:"f2A_1_6", before:"The design system", verb:"include", after:"over 400 components — it covers every product surface.", answer:"includes", wrongFeedback:"✗ includes\n💡 A stable fact about the system → simple. Singular → -s.", correctFeedback:"✓ includes — present simple for a stable fact." }
+            ]
+          },
+          {
+            type: "mc", id: "ex2A_2",
+            title: "Choose the correct form",
+            instruction: "Select the best answer.",
+            items: [
+              { id:"mc2A_2_1", question:"— ___ you use Linear or Notion for sprint planning? — Linear for tasks, Notion for docs.", options:[
+                { text:"Are",  correct:false, explain:"'Are you use' is ungrammatical — present continuous takes are + verb-ing." },
+                { text:"Do",   correct:true,  explain:"✓ Present simple question: Do + subject + base verb. Asking about a habit." },
+                { text:"Does", correct:false, explain:"'Does' is for third-person singular. 'You' takes 'Do'." }
+              ]},
+              { id:"mc2A_2_2", question:"Oksana ___ from home on Wednesdays as part of the studio's hybrid policy.", options:[
+                { text:"work",       correct:false, explain:"Base form 'work' is not correct for third-person singular positive statements." },
+                { text:"is working", correct:false, explain:"Continuous implies a temporary situation. A fixed policy calls for simple." },
+                { text:"works",      correct:true,  explain:"✓ A regular schedule from a standing policy = present simple, -s." }
+              ]},
+              { id:"mc2A_2_3", question:"Andrii ___ the sprint scope once the team has voted in Linear. It's the standard process.", options:[
+                { text:"finalise",    correct:false, explain:"Base form without -s — not correct for third-person singular positive." },
+                { text:"finalises",   correct:true,  explain:"✓ Defined process Andrii always follows → simple, third-person -s." },
+                { text:"is finalising", correct:false, explain:"Continuous implies temporary; this is a standing process." }
+              ]},
+              { id:"mc2A_2_4", question:"— ___ Tomek know the pitch is rescheduled? — I'm not sure, check with him.", options:[
+                { text:"Is",   correct:false, explain:"'Know' is stative — never takes continuous forms like 'is knowing'." },
+                { text:"Does", correct:true,  explain:"✓ 'Know' is stative, always simple. Question: Does + subject + base verb." },
+                { text:"Do",   correct:false, explain:"'Tomek' is third-person singular — use 'does', not 'do'." }
+              ]}
+            ]
+          },
+          {
+            type: "situational", id: "ex2A_3",
+            title: "Form the question or negative",
+            instruction: "Read each situation. Write a natural present simple sentence — no word hints.",
+            items: [
+              { id:"s2A_3_1", prompt:"Ask Marcus how often he runs the design review.", answer:"how often do you run the design review|how often do you hold the design review|how often does marcus run the design review", wrongFeedback:"✗ How often do you run the design review?\n💡 Simple question for a routine: How often + do/does + subject + base verb?", correctFeedback:"✓ Present simple question for a repeated event." },
+              { id:"s2A_3_2", prompt:"Tell a new team member that Sara doesn't use Miro — the team switched to FigJam.", answer:"sara doesn't use miro|sara does not use miro|she doesn't use miro", wrongFeedback:"✗ Sara doesn't use Miro.\n💡 Third-person negative: doesn't + base verb (no -s on main verb).", correctFeedback:"✓ doesn't use — correct third-person negative." },
+              { id:"s2A_3_3", prompt:"Write an FAQ fact: the platform supports over 20 languages.", answer:"the platform supports over 20 languages|it supports over 20 languages|the platform supports more than 20 languages", wrongFeedback:"✗ The platform supports over 20 languages.\n💡 Facts use present simple. Third person singular → -s.", correctFeedback:"✓ supports — present simple for a stable fact." }
+            ]
+          }
+        ]
+      },
+      /* Variation B */
+      {
+        label: "B",
+        exercises: [
+          {
+            type: "correction", id: "ex2B_1",
+            title: "Fix the Slack message",
+            instruction: "Some lines have a verb form error. Write the corrected form, or 'correct'.",
+            preamble: "Hi Andrii,\n\nQuick onboarding note for the new Kyiv team member...",
+            items: [
+              { id:"c2B_1_1", line:"(1) Marcus reviews every PR before it goes to staging — that's the process.", answer:"correct", wrongFeedback:"✗ This line is correct. 'Reviews' and 'goes' — third-person -s for standing processes.", correctFeedback:"✓ Correct — both verbs use third-person -s for routines." },
+              { id:"c2B_1_2", line:"(2) Natalia don't attend the Monday sync — she's in client calls.", answer:"doesn't attend|does not attend", wrongFeedback:"✗ doesn't attend\n💡 Natalia = she (third-person singular) → 'doesn't', not 'don't'.", correctFeedback:"✓ doesn't attend — third-person singular negative." },
+              { id:"c2B_1_3", line:"(3) The team is meeting every Friday for the retrospective.", answer:"meets", wrongFeedback:"✗ meets\n💡 A fixed, recurring event = simple. 'Is meeting' implies a one-off arrangement.", correctFeedback:"✓ meets — standing weekly event uses present simple." },
+              { id:"c2B_1_4", line:"(4) Leo doesn't use Linear for anything personal — only for sprint tasks.", answer:"correct", wrongFeedback:"✗ This line is correct. 'Doesn't use' — third-person negative. Simple for a habit.", correctFeedback:"✓ Correct — doesn't + base verb, no -s. Well spotted." },
+              { id:"c2B_1_5", line:"(5) Daria always sends the weekly Loom update on Sunday evenings.", answer:"correct", wrongFeedback:"✗ This line is correct. 'Sends' — third-person -s for a reliable routine.", correctFeedback:"✓ Correct — 'sends' with -s for a weekly habit." },
+              { id:"c2B_1_6", line:"(6) The component library don't include dark mode tokens yet.", answer:"doesn't include|does not include", wrongFeedback:"✗ doesn't include\n💡 'The component library' is singular (it) → 'doesn't', not 'don't'.", correctFeedback:"✓ doesn't include — singular subject requires 'doesn't'." }
+            ]
+          },
+          {
+            type: "fill", id: "ex2B_2",
+            title: "Fill in the gaps",
+            instruction: "Complete with the correct present simple form.",
+            items: [
+              { id:"f2B_2_1", before:"Daria", verb:"run", after:"the brand guidelines workshop every time we onboard a new client.", answer:"runs", wrongFeedback:"✗ runs\n💡 Recurring event → simple. Third person → -s. 'Run' → 'runs'.", correctFeedback:"✓ runs — third-person -s for a regular responsibility." },
+              { id:"f2B_2_2", before:"— Where", verb:"the design team / sit", after:"in the new Warsaw office? — They have a whole floor.", answer:"does the design team sit|do the design team sit", wrongFeedback:"✗ does the design team sit\n💡 Simple question: Does/Do + subject + base verb.", correctFeedback:"✓ Does … sit — base verb in the question form." },
+              { id:"f2B_2_3", before:"The system", verb:"not / allow", after:"users to export PDFs unless they upgrade to Pro.", answer:"does not allow|doesn't allow", wrongFeedback:"✗ doesn't allow\n💡 A product rule → fact. Third-person negative: does not + base verb.", correctFeedback:"✓ doesn't allow — system fact, third-person negative." },
+              { id:"f2B_2_4", before:"Andrii", verb:"speak", after:"with the investors in Amsterdam twice a quarter.", answer:"speaks", wrongFeedback:"✗ speaks\n💡 Scheduled recurring contact → simple. Third person → -s.", correctFeedback:"✓ speaks — routine interaction, third-person -s." }
+            ]
+          },
+          {
+            type: "reorder", id: "ex2B_3",
+            title: "Build the sentence",
+            instruction: "Tap words to build the sentence.",
+            items: [
+              { id:"r2B_3_1", label:"Sentence 1", words:["Natalia","always","sends","a","project","update","before","the","sprint","ends"], answer:"natalia always sends a project update before the sprint ends", wrongFeedback:"✗ Natalia always sends a project update before the sprint ends." },
+              { id:"r2B_3_2", label:"Sentence 2", words:["Does","the","platform","support","dark","mode","out","of","the","box"], answer:"does the platform support dark mode out of the box", wrongFeedback:"✗ Does the platform support dark mode out of the box?" }
+            ]
+          }
+        ]
+      },
+      /* Variation C */
+      {
+        label: "C",
+        exercises: [
+          {
+            type: "mc", id: "ex2C_1",
+            title: "Spot the error",
+            instruction: "One option is correct — choose carefully.",
+            items: [
+              { id:"mc2C_1_1", question:"Sara ___ the creative brief before every project starts — it's mandatory.", options:[
+                { text:"is writing",  correct:false, explain:"Continuous = temporary/right now. A mandatory process every time = simple." },
+                { text:"write",       correct:false, explain:"Base form without -s is wrong for third-person singular positive." },
+                { text:"writes",      correct:true,  explain:"✓ Mandatory routine, third-person singular → -s." },
+                { text:"does write",  correct:false, explain:"'Does write' adds unnecessary emphasis — plain 'writes' is correct here." }
+              ]},
+              { id:"mc2C_1_2", question:"— ___ the Figma plugin sync automatically? — Yes, every time you save.", options:[
+                { text:"Do",       correct:false, explain:"'Do' is for I/you/we/they. 'The Figma plugin' is third-person singular." },
+                { text:"Does",     correct:true,  explain:"✓ Third-person singular question: Does + base verb." },
+                { text:"Is",       correct:false, explain:"'Is sync' mixes passive and continuous incorrectly." },
+                { text:"Are",      correct:false, explain:"'Are' is for plural or you — 'the plugin' is singular." }
+              ]},
+              { id:"mc2C_1_3", question:"Tomek ___ the sprint board every Monday to make sure all tasks are assigned.", options:[
+                { text:"updates",      correct:true,  explain:"✓ Weekly routine, third-person singular → -s." },
+                { text:"is updating",  correct:false, explain:"Continuous suggests he's doing it right now, not that it's a weekly habit." },
+                { text:"update",       correct:false, explain:"Base form — needs -s for third-person singular positive." },
+                { text:"do update",    correct:false, explain:"'Do' is not used in affirmative simple sentences (only in negatives/questions/emphasis)." }
+              ]},
+              { id:"mc2C_1_4", question:"The onboarding email sequence ___ eight steps and takes about five days to complete.", options:[
+                { text:"contain",      correct:false, explain:"'Contain' needs -s for third-person singular positive: 'contains'." },
+                { text:"is containing",correct:false, explain:"'Contain' is stative — describes a property, not an action. Always simple." },
+                { text:"contains",     correct:true,  explain:"✓ Fact about the sequence. Stative 'contain' → present simple, -s." },
+                { text:"are containing",correct:false, explain:"'Are' is for plural. 'The sequence' is singular." }
+              ]}
+            ]
+          },
+          {
+            type: "situational", id: "ex2C_2",
+            title: "Write the sentence",
+            instruction: "Construct a present simple sentence for each situation.",
+            items: [
+              { id:"s2C_2_1", prompt:"Explain to a client that Oksana handles all technical queries — it's her permanent responsibility.", answer:"oksana handles all technical queries|she handles all technical queries|oksana manages all technical queries", wrongFeedback:"✗ Oksana handles all technical queries.\n💡 Permanent responsibility → simple. Third person -s.", correctFeedback:"✓ handles — present simple for a standing role." },
+              { id:"s2C_2_2", prompt:"A new hire asks if the team uses Jira. Tell them no — the team uses Linear.", answer:"we don't use jira we use linear|we use linear not jira|the team uses linear|we don't use jira|the team doesn't use jira", wrongFeedback:"✗ We use Linear. / We don't use Jira.\n💡 Tool habits → simple. Negatives: don't/doesn't + base verb.", correctFeedback:"✓ Present simple for a permanent tool preference." },
+              { id:"s2C_2_3", prompt:"Write a product fact for a pitch deck: the API processes over 1 million requests per day.", answer:"the api processes over 1 million requests per day|the api handles over 1 million requests per day|it processes over 1 million requests a day", wrongFeedback:"✗ The API processes over 1 million requests per day.\n💡 Stable fact → simple. Third-person -s.", correctFeedback:"✓ processes — present simple for a quantified product fact." }
+            ]
+          },
+          {
+            type: "fill", id: "ex2C_3",
+            title: "Fill in the gaps",
+            instruction: "Complete with the correct present simple form.",
+            items: [
+              { id:"f2C_3_1", before:"— When", verb:"Leo / usually / start", after:"his deep-work blocks? — Around 7am.", answer:"does leo usually start|does leo start", wrongFeedback:"✗ does Leo usually start\n💡 Simple question about a routine: Does + subject + base verb (no -s).", correctFeedback:"✓ does … start — correct question form." },
+              { id:"f2C_3_2", before:"The Figma component", verb:"not / scale", after:"properly below 320px — we need to fix it.", answer:"does not scale|doesn't scale", wrongFeedback:"✗ doesn't scale\n💡 A bug (a fact right now) → simple. Third-person: doesn't + base verb.", correctFeedback:"✓ doesn't scale — product fact, third-person negative." },
+              { id:"f2C_3_3", before:"Every quarter, Natalia", verb:"fly", after:"to Amsterdam for the board meeting.", answer:"flies", wrongFeedback:"✗ flies\n💡 'Fly' → third-person: -y becomes -ies. Quarterly routine → simple.", correctFeedback:"✓ flies — fly → flies (-y to -ies), recurring routine." }
+            ]
+          }
+        ]
       }
+    ]
+  },
 
-      showFeedback(isCorrect, explanation) {
-        this.isAnswered = true;
-        this.feedback.className = `feedback ${isCorrect ? 'success' : 'error'}`;
-        
-        if (isCorrect) {
-          this.feedback.innerHTML = `<strong>Correct!</strong><br>${explanation}`;
-          this.actionBtn.textContent = 'Next Exercise';
-        } else {
-          this.feedback.innerHTML = `<strong>Not quite.</strong><br>${explanation}`;
-          this.actionBtn.textContent = 'Got it, Next';
-        }
+  /* ── UNIT 3 ── Continuous vs Simple ── */
+  {
+    id: "unit3",
+    label: "Unit 3 — Continuous vs Simple",
+    title: "Continuous vs Simple",
+    subtitle: "I am doing vs I do — knowing when to use each",
+    ruleBox: {
+      heading: "Key Rule",
+      lines: [
+        "Continuous = temporary / in progress around now. Simple = permanent, habitual, or always true.",
+        { code: "Leo is leading the sprint this week. (temporary)" },
+        { code: "Leo leads the design team. (permanent role)" },
+        "Stative verbs (know, want, need, believe, own, prefer, contain) almost never take -ing.",
+        { code: "✗ I am knowing the answer.  ✓ I know the answer." }
+      ]
+    },
+    refCard: {
+      heading: "Stative verbs — never (or rarely) continuous",
+      items: [
+        { base: "know",   note: "understand" },
+        { base: "want",   note: "need" },
+        { base: "own",    note: "contain" },
+        { base: "prefer", note: "believe" },
+        { base: "hate",   note: "love / like" },
+        { base: "seem",   note: "appear" }
+      ]
+    },
+    variations: [
+      /* Variation A */
+      {
+        label: "A",
+        exercises: [
+          {
+            type: "fill", id: "ex3A_1",
+            title: "Fill in the gaps",
+            instruction: "Choose simple or continuous. Use the verb in brackets — tense is yours.",
+            items: [
+              { id:"f3A_1_1", before:"Tomek usually works remotely, but this week he", verb:"visit", after:"the Berlin office for the annual design summit.", answer:"is visiting", wrongFeedback:"✗ is visiting\n💡 'This week' + unusual temporary arrangement → continuous.", correctFeedback:"✓ is visiting — temporary exception to a normal routine." },
+              { id:"f3A_1_2", before:"Oksana", verb:"know", after:"the Figma API better than anyone on the team.", answer:"knows", wrongFeedback:"✗ knows\n💡 'Know' is stative. Stative verbs don't take continuous. Use simple.", correctFeedback:"✓ knows — stative verb, always simple." },
+              { id:"f3A_1_3", before:"I", verb:"not / understand", after:"why the conversion rate dropped after the A/B test.", answer:"don't understand|do not understand", wrongFeedback:"✗ don't understand\n💡 'Understand' is stative. Never 'am not understanding'.", correctFeedback:"✓ don't understand — stative negative, simple." },
+              { id:"f3A_1_4", before:"Marcus", verb:"write", after:"all the UX copy for the new onboarding flow — he's been at it since Monday.", answer:"is writing", wrongFeedback:"✗ is writing\n💡 'Since Monday' + ongoing task → continuous.", correctFeedback:"✓ is writing — ongoing activity in progress." },
+              { id:"f3A_1_5", before:"Our lead developer", verb:"push", after:"code every morning before the stand-up — she never misses it.", answer:"pushes", wrongFeedback:"✗ pushes\n💡 'Every morning' + never = reliable routine → simple, third-person -s.", correctFeedback:"✓ pushes — daily habit, present simple." },
+              { id:"f3A_1_6", before:"Natalia", verb:"prefer", after:"async updates over live stand-ups — she always sends a Loom.", answer:"prefers", wrongFeedback:"✗ prefers\n💡 'Prefer' is stative → simple. Third person → -s.", correctFeedback:"✓ prefers — stative verb, simple, third-person -s." },
+              { id:"f3A_1_7", before:"The Lviv team", verb:"use", after:"Craft for documentation this sprint, but they usually work in Notion.", answer:"is using|are using", wrongFeedback:"✗ is/are using\n💡 'This sprint' = temporary change from the norm → continuous.", correctFeedback:"✓ is/are using — temporary change, continuous." }
+            ]
+          },
+          {
+            type: "mc", id: "ex3A_2",
+            title: "Continuous or simple?",
+            instruction: "Choose the correct form. At least one surprising answer.",
+            items: [
+              { id:"mc3A_2_1", question:"I ___ this Figma plugin makes the handoff much faster — total game changer.", options:[
+                { text:"am thinking",  correct:false, explain:"'Think' as opinion (= believe) is stative. Must use present simple." },
+                { text:"think",        correct:true,  explain:"✓ Opinion 'think' (= believe) is stative → always present simple." },
+                { text:"am believing", correct:false, explain:"'Believe' is also stative, but 'think' is the right verb here." }
+              ]},
+              { id:"mc3A_2_2", question:"Sara ___ to Daria about the revised pitch deck. Can you wait two minutes?", options:[
+                { text:"talks",      correct:false, explain:"Simple describes a habit. Here we mean 'right at this moment'." },
+                { text:"is talking", correct:true,  explain:"✓ In progress right now → continuous." },
+                { text:"does talk",  correct:false, explain:"Emphatic simple — for contrast, not for actions in progress." }
+              ]},
+              { id:"mc3A_2_3", question:"This component ___ three props — check the Figma docs.", options:[
+                { text:"is containing", correct:false, explain:"'Contain' is stative — always simple, never continuous." },
+                { text:"contains",      correct:true,  explain:"✓ Property of the component (stative 'contain') → simple." },
+                { text:"does contain",  correct:false, explain:"'Does contain' adds unnecessary emphasis. Plain 'contains' is natural." }
+              ]},
+              { id:"mc3A_2_4", question:"Andrii usually writes the investor update, but this month Oksana ___ it.", options:[
+                { text:"writes",     correct:false, explain:"Simple = permanent habit. 'This month' marks it as temporary." },
+                { text:"is writing", correct:true,  explain:"✓ Temporary arrangement this month → continuous." },
+                { text:"write",      correct:false, explain:"Base form needs is/am/are for continuous." }
+              ]}
+            ]
+          },
+          {
+            type: "correction", id: "ex3A_3",
+            title: "Fix the onboarding email",
+            instruction: "Write the corrected verb form, or 'correct' if the line is fine.",
+            preamble: "Hi Daria,\n\nWelcome to the team! Quick overview of how we work...",
+            items: [
+              { id:"c3A_3_1", line:"(1) Our team is preferring async updates — send a Loom instead of attending every call.", answer:"prefers", wrongFeedback:"✗ prefers\n💡 'Prefer' is stative. Cannot say 'is preferring'. Use simple.", correctFeedback:"✓ prefers — stative verb, must use present simple." },
+              { id:"c3A_3_2", line:"(2) Marcus writes all the UX copy for new features — he's the main product voice.", answer:"correct", wrongFeedback:"✗ This line is correct. 'Writes' = simple for a permanent role.", correctFeedback:"✓ Correct — simple for a standing responsibility." },
+              { id:"c3A_3_3", line:"(3) This week, we are finishing the final sprint before the product launch.", answer:"correct", wrongFeedback:"✗ This line is correct. 'This week' + temporary task → continuous is right.", correctFeedback:"✓ Correct — temporary project-specific activity, continuous." },
+              { id:"c3A_3_4", line:"(4) I am thinking you'll really enjoy the design review format once you see it.", answer:"think", wrongFeedback:"✗ think\n💡 'Think' used as opinion (= believe) is stative → always simple.", correctFeedback:"✓ think — stative opinion use, present simple." },
+              { id:"c3A_3_5", line:"(5) Natalia is usually presenting the Q results each quarter — she's really clear.", answer:"presents", wrongFeedback:"✗ presents\n💡 'Usually' = habitual routine → simple. Not continuous.", correctFeedback:"✓ presents — 'usually' signals a habit, use simple." }
+            ]
+          }
+        ]
+      },
+      /* Variation B */
+      {
+        label: "B",
+        exercises: [
+          {
+            type: "fill", id: "ex3B_1",
+            title: "Fill in the gaps",
+            instruction: "Simple or continuous? Use the verb in brackets.",
+            items: [
+              { id:"f3B_1_1", before:"The platform", verb:"process", after:"over a million API calls a day — the infrastructure is solid.", answer:"processes", wrongFeedback:"✗ processes\n💡 A stable product fact → simple. Third-person -s.", correctFeedback:"✓ processes — fact about the platform, simple." },
+              { id:"f3B_1_2", before:"Leo", verb:"not / read", after:"the full spec right now — he's in a call. Can you wait?", answer:"is not reading|isn't reading", wrongFeedback:"✗ is not reading\n💡 'Right now' = in progress → continuous negative.", correctFeedback:"✓ isn't reading — action not in progress right now." },
+              { id:"f3B_1_3", before:"I", verb:"want", after:"to move the deadline to Friday — the copy isn't ready.", answer:"want", wrongFeedback:"✗ want\n💡 'Want' is stative → always simple. Never 'am wanting'.", correctFeedback:"✓ want — stative verb, simple." },
+              { id:"f3B_1_4", before:"Daria usually handles the client handoff, but this quarter Tomek", verb:"take", after:"the lead.", answer:"is taking", wrongFeedback:"✗ is taking\n💡 Temporary arrangement ('this quarter') → continuous.", correctFeedback:"✓ is taking — temporary change, continuous." },
+              { id:"f3B_1_5", before:"The Kyiv team", verb:"hold", after:"a retrospective every second Friday — it's non-negotiable.", answer:"holds", wrongFeedback:"✗ holds\n💡 Recurring fixed event → simple. Collective noun singular → -s.", correctFeedback:"✓ holds — standing biweekly event, simple." }
+            ]
+          },
+          {
+            type: "situational", id: "ex3B_2",
+            title: "Simple or continuous — you decide",
+            instruction: "Read the situation. Choose the right tense and write the full sentence.",
+            items: [
+              { id:"s3B_2_1", prompt:"A client asks what Leo does at the company. Explain his permanent role: he leads the product design team.", answer:"he leads the product design team|leo leads the product design team|he manages the product design team", wrongFeedback:"✗ He leads the product design team.\n💡 Permanent job role = simple. Not 'is leading' — that would suggest it's temporary.", correctFeedback:"✓ leads — simple for a permanent role." },
+              { id:"s3B_2_2", prompt:"Marcus asks why you haven't replied. Explain you're writing a creative brief right now.", answer:"i am writing a creative brief|i'm writing a creative brief|i am working on a creative brief|i'm working on a creative brief", wrongFeedback:"✗ I'm writing a creative brief right now.\n💡 Action in progress at this moment → continuous.", correctFeedback:"✓ am writing — in-progress action, continuous." },
+              { id:"s3B_2_3", prompt:"A new hire seems confused about the sprint tool. Tell them you prefer Linear — not Jira.", answer:"i want linear|we want linear|we use linear|i prefer linear|we prefer linear|we don't use jira we use linear", wrongFeedback:"✗ We prefer Linear. / I want Linear.\n💡 'Want' and 'prefer' are stative → always simple.", correctFeedback:"✓ want / prefer — stative verbs, present simple." }
+            ]
+          },
+          {
+            type: "reorder", id: "ex3B_3",
+            title: "Build the sentence",
+            instruction: "Tap words to build the sentence.",
+            items: [
+              { id:"r3B_3_1", label:"Sentence 1", words:["Andrii","is","leading","the","rebrand","project","this","quarter"], answer:"andrii is leading the rebrand project this quarter", wrongFeedback:"✗ Andrii is leading the rebrand project this quarter." },
+              { id:"r3B_3_2", label:"Sentence 2", words:["The","Kyiv","studio","always","sends","a","weekly","Loom","update"], answer:"the kyiv studio always sends a weekly loom update", wrongFeedback:"✗ The Kyiv studio always sends a weekly Loom update." }
+            ]
+          }
+        ]
+      },
+      /* Variation C */
+      {
+        label: "C",
+        exercises: [
+          {
+            type: "mc", id: "ex3C_1",
+            title: "Spot the error",
+            instruction: "One option is correct — choose carefully. Stative verb traps included.",
+            items: [
+              { id:"mc3C_1_1", question:"I ___ the new brief is too vague — we need more detail before we can scope it.", options:[
+                { text:"am thinking",  correct:false, explain:"'Think' as opinion = stative. Always simple — never 'am thinking' in this sense." },
+                { text:"think",        correct:true,  explain:"✓ Opinion 'think' (= believe) is stative. Present simple." },
+                { text:"am believing", correct:false, explain:"'Believe' is stative, but 'think' is the correct word for this sentence." },
+                { text:"believes",     correct:false, explain:"'Believes' is third person, but the subject is 'I'." }
+              ]},
+              { id:"mc3C_1_2", question:"The design team ___ the new brand guidelines to all studio leads this week.", options:[
+                { text:"sends",        correct:false, explain:"Simple = routine. 'This week' signals a one-time temporary action." },
+                { text:"is sending",   correct:true,  explain:"✓ A specific temporary action happening this week → continuous." },
+                { text:"are sending",  correct:false, explain:"'The design team' is usually treated as singular → 'is sending'. ('are' could be accepted informally, but 'is' is safer here.)" },
+                { text:"send",         correct:false, explain:"Base form — needs is/are + verb-ing for continuous." }
+              ]},
+              { id:"mc3C_1_3", question:"Our analytics dashboard ___ the real-time data — there's a 30-second delay.", options:[
+                { text:"isn't showing",  correct:true,  explain:"✓ Observable issue right now → continuous negative." },
+                { text:"doesn't show",   correct:false, explain:"Simple implies a permanent deficiency. Here it's a current, possibly temporary issue." },
+                { text:"don't show",     correct:false, explain:"'Our dashboard' is singular — needs 'doesn't', and the context calls for continuous anyway." },
+                { text:"not showing",    correct:false, explain:"Missing the auxiliary 'is' — needs 'is not showing'." }
+              ]},
+              { id:"mc3C_1_4", question:"Marcus ___ six components a day on average — that's his usual output.", options:[
+                { text:"is building",  correct:false, explain:"Six components a day 'on average' = a regular output pattern, not a current temporary activity." },
+                { text:"build",        correct:false, explain:"Base form without -s — needs third-person -s for Marcus (he)." },
+                { text:"builds",       correct:true,  explain:"✓ Average/routine output → present simple, third-person -s." },
+                { text:"does build",   correct:false, explain:"Emphatic form — unnecessary here. Plain 'builds' is natural." }
+              ]}
+            ]
+          },
+          {
+            type: "correction", id: "ex3C_2",
+            title: "Fix the design brief",
+            instruction: "Write the corrected verb, or 'correct' if the line is fine.",
+            preamble: "Project brief — Kyiv rebrand, Q2\nStatus update for the Amsterdam team:",
+            items: [
+              { id:"c3C_2_1", line:"(1) Oksana is knowing every edge case in the component library.", answer:"knows", wrongFeedback:"✗ knows\n💡 'Know' is stative — never 'is knowing'. Always present simple.", correctFeedback:"✓ knows — stative verb, simple." },
+              { id:"c3C_2_2", line:"(2) The Lviv team is handling the illustration set this sprint.", answer:"correct", wrongFeedback:"✗ This line is correct. 'This sprint' = temporary → continuous.", correctFeedback:"✓ Correct — temporary sprint task, continuous is right." },
+              { id:"c3C_2_3", line:"(3) Sara is wanting to move the deadline to next Monday.", answer:"wants", wrongFeedback:"✗ wants\n💡 'Want' is stative → always simple. 'Is wanting' is not standard.", correctFeedback:"✓ wants — stative verb, must use simple." },
+              { id:"c3C_2_4", line:"(4) Tomek reviews all stakeholder feedback before the final sign-off — that's his role.", answer:"correct", wrongFeedback:"✗ This line is correct. 'Reviews' = simple for a permanent responsibility.", correctFeedback:"✓ Correct — standing process, present simple." },
+              { id:"c3C_2_5", line:"(5) We are usually presenting the results in a Loom — not a live call.", answer:"usually present", wrongFeedback:"✗ usually present\n💡 'Usually' signals a habit → simple. 'Are presenting' implies a current temporary action.", correctFeedback:"✓ usually present — habitual practice, present simple." }
+            ]
+          },
+          {
+            type: "fill", id: "ex3C_3",
+            title: "Fill in the gaps — mixed challenge",
+            instruction: "Seven sentences. Choose simple or continuous carefully.",
+            items: [
+              { id:"f3C_3_1", before:"The onboarding flow", verb:"need", after:"a complete rewrite — it's confusing new users.", answer:"needs", wrongFeedback:"✗ needs\n💡 'Need' is stative → always simple. Third-person -s.", correctFeedback:"✓ needs — stative, simple, -s." },
+              { id:"f3C_3_2", before:"Daria", verb:"present", after:"the Q2 brand results to the board as we speak.", answer:"is presenting", wrongFeedback:"✗ is presenting\n💡 'As we speak' = right now → continuous.", correctFeedback:"✓ is presenting — in progress at this moment." },
+              { id:"f3C_3_3", before:"Leo", verb:"not / believe", after:"the A/B results are accurate — the sample size is too small.", answer:"does not believe|doesn't believe", wrongFeedback:"✗ doesn't believe\n💡 'Believe' is stative → simple. Third-person negative: doesn't + base verb.", correctFeedback:"✓ doesn't believe — stative negative, simple." },
+              { id:"f3C_3_4", before:"The Berlin and Warsaw teams", verb:"merge", after:"their design systems this quarter — it's a big initiative.", answer:"are merging", wrongFeedback:"✗ are merging\n💡 'This quarter' = temporary major project → continuous, plural subject.", correctFeedback:"✓ are merging — plural, temporary initiative, continuous." }
+            ]
+          }
+        ]
       }
+    ]
+  }
+];
+
+/* ============================================================
+   ENGINE
+   ============================================================ */
+
+let totalChecks = 0;
+let totalCorrect = 0;
+
+const CONTRACTIONS = [
+  [/\bdon't\b/g,"do not"],[/\bdidn't\b/g,"did not"],[/\bdoesn't\b/g,"does not"],
+  [/\bisn't\b/g,"is not"],[/\baren't\b/g,"are not"],[/\bwasn't\b/g,"was not"],
+  [/\bweren't\b/g,"were not"],[/\bhaven't\b/g,"have not"],[/\bhasn't\b/g,"has not"],
+  [/\bi'm\b/g,"i am"],[/\bit's\b/g,"it is"],[/\bthey're\b/g,"they are"],
+  [/\bwe're\b/g,"we are"],[/\bwon't\b/g,"will not"],[/\bcan't\b/g,"cannot"],
+  [/'ve\b/g," have"],[/'re\b/g," are"],[/'ll\b/g," will"]
+];
+
+function normalize(str) {
+  let s = str.trim().replace(/\s+/g," ").toLowerCase();
+  s = s.replace(/[''`]/g,"'");
+  for (const [pat, rep] of CONTRACTIONS) s = s.replace(pat, rep);
+  s = s.replace(/[.,!?;:]$/,"");
+  return s;
+}
+
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({length:m+1},(_,i) => Array.from({length:n+1},(_,j) => i||j ? (i?i:j) : 0));
+  for (let i=1;i<=m;i++) for (let j=1;j<=n;j++)
+    dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+
+function isCorrect(userRaw, answerRaw) {
+  const user = normalize(userRaw);
+  const answers = answerRaw.split("|").map(a => normalize(a));
+  for (const ans of answers) {
+    if (user === ans) return "correct";
+    const uw = user.split(" "), aw = ans.split(" ");
+    if (aw.length <= uw.length) {
+      for (let i=0;i<=uw.length-aw.length;i++)
+        if (aw.every((w,j)=>w===uw[i+j])) return "correct";
     }
+    if (levenshtein(user, ans) <= 3) return "almost";
+  }
+  return "wrong";
+}
 
-    // Initialize Engine
-    document.addEventListener('DOMContentLoaded', () => {
-      new GrammarEngine();
+function updateScore() {
+  const badge = document.getElementById("score-badge");
+  badge.textContent = `${totalCorrect}/${totalChecks}`;
+  badge.classList.toggle("green", totalChecks>0 && totalCorrect/totalChecks>=0.8);
+}
+
+function escHtml(str) {
+  return String(str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+/* ── Exercise renderers ── */
+
+function renderFill(ex) {
+  const wrap = makeExWrap(ex, "Fill in the gaps");
+  const body = wrap.querySelector(".exercise-body");
+  ex.items.forEach((item, idx) => {
+    const row = document.createElement("div");
+    row.className = "fill-item";
+    row.innerHTML = `<span class="item-num">${idx+1}</span>
+      <span>${escHtml(item.before)}</span>
+      <input class="fill-input" id="inp_${item.id}" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="…">
+      <span class="verb-hint">(${escHtml(item.verb)})</span>
+      <span>${escHtml(item.after)}</span>
+      <div class="feedback" id="fb_${item.id}"></div>`;
+    body.appendChild(row);
+  });
+  addCheckBtn(body, ex.id, () => checkTextItems(ex.id, ex.items));
+  return wrap;
+}
+
+function renderMc(ex) {
+  const wrap = makeExWrap(ex, "Multiple choice");
+  const body = wrap.querySelector(".exercise-body");
+  ex.items.forEach((item, idx) => {
+    const div = document.createElement("div");
+    div.className = "mc-item";
+    div.innerHTML = `<div class="mc-question"><span class="item-num">${idx+1}</span> ${escHtml(item.question)}</div><div class="mc-options"></div>`;
+    const opts = div.querySelector(".mc-options");
+    item.options.forEach((opt, oi) => {
+      const btn = document.createElement("button");
+      btn.className = "mc-btn";
+      btn.id = `mc_${item.id}_${oi}`;
+      btn.textContent = opt.text;
+      btn.addEventListener("click", () => selectMC(item.id, oi, item.options));
+      const expl = document.createElement("div");
+      expl.className = "mc-explain";
+      expl.id = `explain_${item.id}_${oi}`;
+      expl.textContent = opt.explain;
+      opts.appendChild(btn);
+      opts.appendChild(expl);
     });
-  </script>
+    body.appendChild(div);
+  });
+  return wrap;
+}
+
+function renderSituational(ex) {
+  const wrap = makeExWrap(ex, "Situational");
+  const body = wrap.querySelector(".exercise-body");
+  ex.items.forEach((item, idx) => {
+    const div = document.createElement("div");
+    div.className = "prompt-item";
+    div.innerHTML = `<div class="prompt-text"><span class="item-num">${idx+1}</span> ${escHtml(item.prompt)}</div>
+      <input class="text-input" id="inp_${item.id}" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Write your answer…">
+      <div class="feedback" id="fb_${item.id}"></div>`;
+    body.appendChild(div);
+  });
+  addCheckBtn(body, ex.id, () => checkTextItems(ex.id, ex.items));
+  return wrap;
+}
+
+function renderCorrection(ex) {
+  const wrap = makeExWrap(ex, "Error correction");
+  const body = wrap.querySelector(".exercise-body");
+  if (ex.preamble) {
+    const pre = document.createElement("div");
+    pre.className = "preamble";
+    pre.textContent = ex.preamble;
+    body.appendChild(pre);
+  }
+  ex.items.forEach((item, idx) => {
+    const div = document.createElement("div");
+    div.className = "prompt-item";
+    div.innerHTML = `<div class="correction-line">${escHtml(item.line)}</div>
+      <input class="text-input" id="inp_${item.id}" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="corrected verb or 'correct'">
+      <div class="feedback" id="fb_${item.id}"></div>`;
+    body.appendChild(div);
+  });
+  addCheckBtn(body, ex.id, () => checkTextItems(ex.id, ex.items));
+  return wrap;
+}
+
+function renderReorder(ex) {
+  const wrap = makeExWrap(ex, "Word order");
+  const body = wrap.querySelector(".exercise-body");
+  const reorderItems = [];
+
+  ex.items.forEach(item => {
+    const shuffled = [...item.words].sort(() => Math.random()-0.5);
+    const div = document.createElement("div");
+    div.className = "reorder-item";
+    div.innerHTML = `<div class="reorder-label">${escHtml(item.label)}</div>
+      <div class="drop-zone" id="drop_${item.id}"></div>
+      <div class="chip-bank" id="bank_${item.id}"></div>
+      <div class="reorder-feedback" id="rfb_${item.id}"></div>`;
+    body.appendChild(div);
+
+    const drop = div.querySelector(`#drop_${item.id}`);
+    const bank = div.querySelector(`#bank_${item.id}`);
+
+    function makeChip(word, inDrop) {
+      const btn = document.createElement("button");
+      btn.className = "chip" + (inDrop ? " placed" : "");
+      btn.textContent = word;
+      btn.addEventListener("click", () => {
+        if (btn.disabled) return;
+        btn.remove();
+        if (inDrop) bank.appendChild(makeChip(word, false));
+        else drop.appendChild(makeChip(word, true));
+      });
+      return btn;
+    }
+    shuffled.forEach(w => bank.appendChild(makeChip(w, false)));
+    reorderItems.push({ item, drop, bank });
+  });
+
+  addCheckBtn(body, ex.id, () => {
+    reorderItems.forEach(({ item, drop, bank }) => {
+      const fb = document.getElementById("rfb_" + item.id);
+      const chips = [...drop.querySelectorAll(".chip")];
+      const userStr = chips.map(c => c.textContent).join(" ");
+      const result = isCorrect(userStr, item.answer);
+      totalChecks++;
+      if (result === "correct") totalCorrect++;
+      fb.className = "reorder-feedback " + (result==="correct" ? "correct" : "wrong");
+      fb.textContent = result==="correct" ? "✓ Correct order!" : (item.wrongFeedback||"✗ Incorrect order.");
+      drop.querySelectorAll(".chip").forEach(c => c.disabled=true);
+      bank.querySelectorAll(".chip").forEach(c => c.disabled=true);
+    });
+    updateScore();
+  });
+  return wrap;
+}
+
+function makeExWrap(ex, typeLabel) {
+  const wrap = document.createElement("div");
+  wrap.className = "exercise";
+  wrap.innerHTML = `<div class="exercise-head">
+    <div class="exercise-type-label">${typeLabel}</div>
+    <div class="exercise-instruction">${escHtml(ex.instruction)}</div>
+  </div><div class="exercise-body"></div>`;
+  return wrap;
+}
+
+function addCheckBtn(body, exId, fn) {
+  const btn = document.createElement("button");
+  btn.className = "check-btn";
+  btn.id = "btn_" + exId;
+  btn.textContent = "Check";
+  btn.addEventListener("click", () => { fn(); btn.disabled = true; });
+  body.appendChild(btn);
+}
+
+function checkTextItems(exId, items) {
+  items.forEach(item => {
+    const inp = document.getElementById("inp_" + item.id);
+    const fb  = document.getElementById("fb_"  + item.id);
+    if (!inp || inp.disabled) return;
+    const val = inp.value.trim();
+    if (!val) return;
+    totalChecks++;
+    const result = isCorrect(val, item.answer);
+    inp.disabled = true;
+    if (result === "correct") {
+      totalCorrect++;
+      fb.className = "feedback correct";
+      fb.textContent = item.correctFeedback || "✓ Correct.";
+    } else if (result === "almost") {
+      fb.className = "feedback almost";
+      fb.textContent = "⚠ Almost! Check spelling or apostrophe.";
+    } else {
+      fb.className = "feedback wrong";
+      fb.textContent = item.wrongFeedback || "✗ Incorrect.";
+    }
+  });
+  updateScore();
+}
+
+function selectMC(itemId, optIdx, options) {
+  const chosen = options[optIdx];
+  totalChecks++;
+  if (chosen.correct) totalCorrect++;
+  updateScore();
+  options.forEach((opt, i) => {
+    const btn  = document.getElementById(`mc_${itemId}_${i}`);
+    const expl = document.getElementById(`explain_${itemId}_${i}`);
+    if (!btn) return;
+    btn.disabled = true;
+    if (opt.correct) btn.classList.add("correct-mc");
+    else if (i===optIdx) btn.classList.add("wrong-mc");
+    if (expl && (i===optIdx || opt.correct)) expl.style.display = "block";
+  });
+}
+
+function buildVariation(variation) {
+  const frag = document.createDocumentFragment();
+  variation.exercises.forEach(ex => {
+    let el;
+    if      (ex.type==="fill")        el = renderFill(ex);
+    else if (ex.type==="mc")          el = renderMc(ex);
+    else if (ex.type==="situational") el = renderSituational(ex);
+    else if (ex.type==="correction")  el = renderCorrection(ex);
+    else if (ex.type==="reorder")     el = renderReorder(ex);
+    if (el) frag.appendChild(el);
+  });
+  return frag;
+}
+
+/* ── State ── */
+let currentUnitIdx = 0;
+let currentVarIdx  = 0;
+
+function buildUnitHeader(unit) {
+  const div = document.createElement("div");
+  div.className = "unit-header";
+  div.innerHTML = `<div class="unit-eyebrow">${escHtml(unit.label)}</div>
+    <h2 class="unit-title">${escHtml(unit.title)}</h2>
+    <p class="unit-subtitle">${escHtml(unit.subtitle)}</p>`;
+  return div;
+}
+
+function buildRuleBox(ruleBox) {
+  const div = document.createElement("div");
+  div.className = "rule-box";
+  div.innerHTML = `<div class="rule-box-label">${escHtml(ruleBox.heading)}</div>`;
+  ruleBox.lines.forEach(line => {
+    if (typeof line === "string") {
+      const p = document.createElement("p");
+      p.textContent = line;
+      div.appendChild(p);
+    } else {
+      const code = document.createElement("code");
+      code.textContent = line.code;
+      div.appendChild(code);
+    }
+  });
+  return div;
+}
+
+function buildRefCard(refCard) {
+  if (!refCard) return null;
+  const div = document.createElement("div");
+  div.className = "ref-card";
+  div.innerHTML = `<div class="ref-label">${escHtml(refCard.heading)}</div><div class="ref-grid"></div>`;
+  const grid = div.querySelector(".ref-grid");
+  refCard.items.forEach(it => {
+    const span = document.createElement("div");
+    span.className = "ref-item";
+    span.innerHTML = `${escHtml(it.base)} <span class="ref-muted">${escHtml(it.note||it.past||"")}</span>`;
+    grid.appendChild(span);
+  });
+  return div;
+}
+
+function showUnit(unitIdx, varIdx) {
+  currentUnitIdx = unitIdx;
+  currentVarIdx  = varIdx || 0;
+  const unit = UNITS[unitIdx];
+  const variation = unit.variations[currentVarIdx];
+
+  /* Update select */
+  document.getElementById("unit-select").value = unitIdx;
+
+  /* Update var tabs */
+  const tabsEl = document.getElementById("var-tabs");
+  tabsEl.innerHTML = "";
+  unit.variations.forEach((v, i) => {
+    const btn = document.createElement("button");
+    btn.className = "var-tab" + (i===currentVarIdx ? " active" : "");
+    btn.textContent = v.label;
+    btn.addEventListener("click", () => showUnit(unitIdx, i));
+    tabsEl.appendChild(btn);
+  });
+
+  /* Build content */
+  const main = document.getElementById("main-content");
+  main.innerHTML = "";
+
+  main.appendChild(buildUnitHeader(unit));
+  main.appendChild(buildRuleBox(unit.ruleBox));
+  const ref = buildRefCard(unit.refCard);
+  if (ref) main.appendChild(ref);
+  main.appendChild(buildVariation(variation));
+}
+
+function init() {
+  const sel = document.getElementById("unit-select");
+  UNITS.forEach((unit, i) => {
+    const opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = unit.label;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener("change", e => showUnit(Number(e.target.value), 0));
+  showUnit(0, 0);
+  updateScore();
+}
+
+init();
+</script>
 </body>
 </html>
