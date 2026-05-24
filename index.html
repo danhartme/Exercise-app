@@ -530,561 +530,418 @@ main {
    ============================================================ */
 
 const UNITS = [
-  /* ── UNIT 1 ── Present Continuous ── */
   {
-    id: "unit1",
-    label: "Unit 1 — Present Continuous",
-    title: "Present Continuous",
-    subtitle: "I am doing — actions happening right now or around now",
-    ruleBox: {
-      heading: "Key Rule",
-      lines: [
-        "Use am/is/are + verb‑ing for actions happening at or around now, and for temporary situations.",
-        { code: "Sara is reviewing the Figma prototype right now." },
-        { code: "The team are working on the rebrand this week." },
-        "Also used for arranged future events.",
-        { code: "Leo is flying to Amsterdam on Monday. (already planned)" }
-      ]
-    },
-    refCard: {
-      heading: "Spelling — verb + -ing",
-      items: [
-        { base: "run → running",    note: "double consonant" },
-        { base: "write → writing",  note: "drop final -e" },
-        { base: "plan → planning",  note: "double consonant" },
-        { base: "sit → sitting",    note: "double consonant" },
-        { base: "use → using",      note: "drop final -e" }
-      ]
-    },
-    variations: [
-      /* Variation A */
-      {
-        label: "A",
-        exercises: [
-          {
-            type: "fill", id: "ex1A_1",
-            title: "Fill in the gaps",
-            instruction: "Complete with the present continuous. Verb in brackets — tense is yours.",
-            items: [
-              { id:"f1A_1_1", before:"Marcus", verb:"write", after:"the creative brief for the rebrand — he'll share it after lunch.", answer:"is writing", wrongFeedback:"✗ is writing\n💡 'Marcus' → is + verb-ing. Drop -e before adding -ing.", correctFeedback:"✓ is writing — in progress right now." },
-              { id:"f1A_1_2", before:"The Warsaw team", verb:"run", after:"a two-week sprint on the onboarding flow.", answer:"is running|are running", wrongFeedback:"✗ is/are running\n💡 Double the final consonant (run → running). Both 'is' and 'are' work for a collective noun.", correctFeedback:"✓ running — double the consonant in CVC pattern." },
-              { id:"f1A_1_3", before:"— Where's Natalia? — She", verb:"not / join", after:"the call — her flight landed late.", answer:"is not joining|isn't joining", wrongFeedback:"✗ is not joining\n💡 Negative continuous: is/am/are + not + verb-ing.", correctFeedback:"✓ Negative continuous — is not joining." },
-              { id:"f1A_1_4", before:"Oksana and Daria", verb:"redesign", after:"the component library this month.", answer:"are redesigning", wrongFeedback:"✗ are redesigning\n💡 Plural subject → are. Drop -e before -ing.", correctFeedback:"✓ are redesigning — plural, temporary project." },
-              { id:"f1A_1_5", before:"Andrii", verb:"pitch", after:"the go-to-market strategy to investors in Berlin right now.", answer:"is pitching", wrongFeedback:"✗ is pitching\n💡 'Right now' confirms the action is in progress.", correctFeedback:"✓ is pitching — in progress this moment." },
-              { id:"f1A_1_6", before:"The retrospective", verb:"not / start", after:"until Thursday — check the Linear calendar.", answer:"is not starting|isn't starting", wrongFeedback:"✗ is not starting\n💡 Arranged future: continuous negative = is not + verb-ing.", correctFeedback:"✓ isn't starting — arranged future, negative form." }
-            ]
-          },
-          {
-            type: "mc", id: "ex1A_2",
-            title: "Choose the correct form",
-            instruction: "Select the best answer. The obvious choice is sometimes wrong.",
-            items: [
-              { id:"mc1A_2_1", question:"Tomek is in his third call today. Right now he ___ the pitch results with the client.", options:[
-                { text:"discuss",       correct:false, explain:"Present simple describes a routine, not an action in progress right now." },
-                { text:"is discussing", correct:true,  explain:"✓ 'Right now' = action in progress → present continuous." },
-                { text:"discusses",     correct:false, explain:"Third-person simple describes habits, not this specific moment." }
-              ]},
-              { id:"mc1A_2_2", question:"I usually work from Kyiv, but this month I ___ from Warsaw while the studio is renovated.", options:[
-                { text:"work",       correct:false, explain:"Present simple = permanent habit, not a temporary arrangement." },
-                { text:"am working", correct:true,  explain:"✓ 'This month' + temporary reason = continuous for now." },
-                { text:"worked",     correct:false, explain:"Past simple places this in the past." }
-              ]},
-              { id:"mc1A_2_3", question:"The Webflow preview ___ — can you check the export settings?", options:[
-                { text:"isn't loading",  correct:true,  explain:"✓ Observable problem right now → present continuous negative." },
-                { text:"doesn't load",   correct:false, explain:"Present simple implies a permanent deficiency, not this instant." },
-                { text:"wasn't loading", correct:false, explain:"Past continuous refers to the past, not what we see now." }
-              ]},
-              { id:"mc1A_2_4", question:"Listen — someone ___ in the background on Leo's Loom recording.", options:[
-                { text:"types",     correct:false, explain:"Simple for a habit; we're pointing to a live, audible action." },
-                { text:"is typing", correct:true,  explain:"✓ 'Listen' + evidence of action now = continuous." },
-                { text:"typed",     correct:false, explain:"Past simple — the action is clearly happening now." }
-              ]}
-            ]
-          },
-          {
-            type: "situational", id: "ex1A_3",
-            title: "Form the question",
-            instruction: "Read each situation. Write a natural present continuous question or statement.",
-            items: [
-              { id:"s1A_3_1", prompt:"Leo's Slack status says 'In a meeting.' Message him to ask what he's doing.", answer:"what are you doing|what are you working on|are you in a meeting", wrongFeedback:"✗ What are you doing? / Are you in a meeting?\n💡 Continuous question: What + am/is/are + subject + verb-ing?", correctFeedback:"✓ Present continuous question — well formed." },
-              { id:"s1A_3_2", prompt:"Daria just opened a new Figma file. Ask her what project she's working on.", answer:"what are you working on|what are you designing|are you starting a new project|what are you building", wrongFeedback:"✗ What are you working on? / What are you designing?\n💡 are + you + verb-ing for an action in progress.", correctFeedback:"✓ Great — continuous question for an ongoing action." },
-              { id:"s1A_3_3", prompt:"The new Linear board isn't loading for the whole team. Tell a colleague.", answer:"the linear board isn't working|linear isn't loading|it isn't loading|the board isn't loading", wrongFeedback:"✗ The Linear board isn't loading / isn't working.\n💡 Negative continuous: is + not + verb-ing.", correctFeedback:"✓ isn't + verb-ing — negative continuous for a visible problem." }
-            ]
-          }
-        ]
-      },
-      /* Variation B */
-      {
-        label: "B",
-        exercises: [
-          {
-            type: "fill", id: "ex1B_1",
-            title: "Fill in the gaps",
-            instruction: "Complete with the present continuous. Verb in brackets.",
-            items: [
-              { id:"f1B_1_1", before:"Sara", verb:"lead", after:"the Amsterdam client workshop this week — she flew in on Sunday.", answer:"is leading", wrongFeedback:"✗ is leading\n💡 Temporary arrangement around now → continuous. 'Sara' → is.", correctFeedback:"✓ is leading — temporary, in progress this week." },
-              { id:"f1B_1_2", before:"Tomek and I", verb:"build", after:"the new investor deck in Notion — we started yesterday.", answer:"are building", wrongFeedback:"✗ are building\n💡 'Tomek and I' = plural → are + verb-ing.", correctFeedback:"✓ are building — plural subject, ongoing task." },
-              { id:"f1B_1_3", before:"— Is the design review starting at 3? — No, it", verb:"not / start", after:"until 4:30.", answer:"is not starting|isn't starting", wrongFeedback:"✗ is not starting\n💡 Arranged event in the near future, negative → is not + verb-ing.", correctFeedback:"✓ isn't starting — arranged future, negative." },
-              { id:"f1B_1_4", before:"The Kyiv team", verb:"migrate", after:"all Miro boards to FigJam before the end of the sprint.", answer:"is migrating|are migrating", wrongFeedback:"✗ is/are migrating\n💡 Current temporary project → continuous.", correctFeedback:"✓ is/are migrating — ongoing temporary task." },
-              { id:"f1B_1_5", before:"— What", verb:"you / do", after:"right now? — I'm finishing the Webflow exports.", answer:"are you doing", wrongFeedback:"✗ are you doing\n💡 Question form: Are/Am/Is + subject + verb-ing?", correctFeedback:"✓ are you doing — standard continuous question." },
-              { id:"f1B_1_6", before:"Natalia", verb:"not / attend", after:"the 9am call — she has a client conflict.", answer:"is not attending|isn't attending", wrongFeedback:"✗ is not attending\n💡 Third person negative continuous: is not + verb-ing.", correctFeedback:"✓ isn't attending — third-person negative continuous." }
-            ]
-          },
-          {
-            type: "correction", id: "ex1B_2",
-            title: "Fix the Slack thread",
-            instruction: "Some lines have a verb form error. Write the corrected form, or 'correct' if the line is fine.",
-            preamble: "Thread: #design-sprint — Tuesday morning",
-            items: [
-              { id:"c1B_2_1", line:"(1) Marcus is presenting the new token system to stakeholders right now.", answer:"correct", wrongFeedback:"✗ This is correct. 'Is presenting' — third-person continuous for an action in progress.", correctFeedback:"✓ Correct — is + verb-ing, action in progress." },
-              { id:"c1B_2_2", line:"(2) Daria and Leo writes the retrospective notes this morning.", answer:"are writing", wrongFeedback:"✗ are writing\n💡 Plural subject in a present, temporary activity → are + verb-ing.", correctFeedback:"✓ are writing — plural continuous." },
-              { id:"c1B_2_3", line:"(3) The onboarding flow is looking great — really clean.", answer:"correct", wrongFeedback:"✗ This is correct. 'Is looking' as an observation right now is acceptable in continuous.", correctFeedback:"✓ Correct — observable quality right now, continuous works." },
-              { id:"c1B_2_4", line:"(4) Oksana redesigns the icon set this week — she's on page 3.", answer:"is redesigning", wrongFeedback:"✗ is redesigning\n💡 'This week' = temporary ongoing task → present continuous, not simple.", correctFeedback:"✓ is redesigning — 'this week' signals a temporary task in progress." },
-              { id:"c1B_2_5", line:"(5) Are we meet to review the A/B results at 2pm?", answer:"are we meeting", wrongFeedback:"✗ are we meeting\n💡 Continuous question form: Are/Am/Is + subject + verb-ing?", correctFeedback:"✓ are we meeting — correct continuous question form." }
-            ]
-          },
-          {
-            type: "reorder", id: "ex1B_3",
-            title: "Build the sentence",
-            instruction: "Tap words to build the sentence. Tap a placed word to return it.",
-            items: [
-              { id:"r1B_3_1", label:"Sentence 1", words:["Sara","is","presenting","the","new","design","system","to","the","board"], answer:"sara is presenting the new design system to the board", wrongFeedback:"✗ Sara is presenting the new design system to the board." },
-              { id:"r1B_3_2", label:"Sentence 2", words:["Are","you","joining","the","Zoom","retrospective","this","afternoon"], answer:"are you joining the zoom retrospective this afternoon", wrongFeedback:"✗ Are you joining the Zoom retrospective this afternoon?" }
-            ]
-          }
-        ]
-      },
-      /* Variation C */
-      {
-        label: "C",
-        exercises: [
-          {
-            type: "mc", id: "ex1C_1",
-            title: "Spot the error",
-            instruction: "Four options — only one is correct. At least one trap included.",
-            items: [
-              { id:"mc1C_1_1", question:"Andrii ___ the Lviv team through the rebrand this quarter — it's a big project.", options:[
-                { text:"is leading",  correct:true,  explain:"✓ A temporary, ongoing project this quarter → present continuous." },
-                { text:"leads",       correct:false, explain:"'Leads' is simple — implies a permanent role. 'This quarter' signals temporary." },
-                { text:"is lead",     correct:false, explain:"'Is lead' is passive, not continuous. Continuous = is + verb-ing." },
-                { text:"leading",     correct:false, explain:"Missing the auxiliary 'is' — you need is/am/are + verb-ing." }
-              ]},
-              { id:"mc1C_1_2", question:"— Why aren't you in the call? — Because I ___ the Figma export and it's taking forever.", options:[
-                { text:"fix",        correct:false, explain:"Base form can't stand alone here — needs am/is/are." },
-                { text:"am fixing",  correct:true,  explain:"✓ An action in progress right now explaining a current situation → continuous." },
-                { text:"fixed",      correct:false, explain:"Past simple — but the speaker is clearly doing this right now." },
-                { text:"am fix",     correct:false, explain:"Ungrammatical — needs the full verb form: am fixing." }
-              ]},
-              { id:"mc1C_1_3", question:"The Warsaw and Kyiv teams ___ on the component audit together this sprint.", options:[
-                { text:"collaborate",     correct:false, explain:"Simple → permanent habit. 'This sprint' marks it as temporary." },
-                { text:"are collaborating", correct:true, explain:"✓ Temporary joint project this sprint → plural continuous." },
-                { text:"is collaborating", correct:false, explain:"Two plural teams → 'are', not 'is'." },
-                { text:"collaborating",   correct:false, explain:"Missing the auxiliary 'are' — needs are + verb-ing." }
-              ]},
-              { id:"mc1C_1_4", question:"Look — the conversion rate ___ already. The new copy must be working.", options:[
-                { text:"improves",     correct:false, explain:"Simple describes a habit or fact. Here we're watching it happen live." },
-                { text:"is improving", correct:true,  explain:"✓ 'Look' + observable change right now = continuous." },
-                { text:"improved",     correct:false, explain:"Past simple — but the change is happening as we watch." },
-                { text:"improve",      correct:false, explain:"Base form — needs is/am/are + verb-ing for a current action." }
-              ]}
-            ]
-          },
-          {
-            type: "situational", id: "ex1C_2",
-            title: "Write the sentence",
-            instruction: "Use present continuous to express the meaning. No word hints.",
-            items: [
-              { id:"s1C_2_1", prompt:"A colleague asks where Leo is. Explain that he's on a flight to Berlin at this moment.", answer:"he is flying to berlin|leo is flying to berlin|he's flying to berlin", wrongFeedback:"✗ He is flying to Berlin.\n💡 Action in progress at this moment — present continuous.", correctFeedback:"✓ is flying — in progress now." },
-              { id:"s1C_2_2", prompt:"You're in the middle of redesigning the onboarding flow. Tell Marcus what you're up to.", answer:"i am redesigning the onboarding flow|i'm redesigning the onboarding flow|i am working on the onboarding flow|i'm working on the onboarding flow", wrongFeedback:"✗ I'm redesigning the onboarding flow.\n💡 Ongoing task right now → am + verb-ing.", correctFeedback:"✓ am redesigning — task in progress." },
-              { id:"s1C_2_3", prompt:"The team has a sprint review scheduled for tomorrow at 10am. State this as an arranged event.", answer:"we are having a sprint review tomorrow|the team is having a sprint review tomorrow|we are meeting for the sprint review tomorrow|we're having a sprint review tomorrow at 10", wrongFeedback:"✗ We're having a sprint review tomorrow at 10am.\n💡 Arranged future events use present continuous.", correctFeedback:"✓ Arranged event in the future — continuous is correct here." }
-            ]
-          },
-          {
-            type: "reorder", id: "ex1C_3",
-            title: "Build the sentence",
-            instruction: "Tap words to build the sentence.",
-            items: [
-              { id:"r1C_3_1", label:"Sentence 1", words:["Oksana","is","not","joining","the","call","today"], answer:"oksana is not joining the call today", wrongFeedback:"✗ Oksana is not joining the call today." },
-              { id:"r1C_3_2", label:"Sentence 2", words:["They","are","migrating","all","their","Miro","boards","to","FigJam"], answer:"they are migrating all their miro boards to figjam", wrongFeedback:"✗ They are migrating all their Miro boards to FigJam." }
-            ]
-          }
-        ]
-      }
+  id: "unit1_3",
+  label: "Units 1–3 — Present Simple, Present Continuous & the Contrast",
+  title: "Present Tenses",
+  subtitle: "What's happening now vs. what happens in general",
+  ruleBox: {
+    heading: "Key Rules",
+    lines: [
+      "Present continuous (am/is/are + -ing): use for actions happening now or around now, or for temporary situations.",
+      { code: "Sara is reviewing the pitch deck right now." },
+      "Present simple: use for habits, routines, permanent facts, and things that are always true.",
+      { code: "Marcus runs the weekly design review every Thursday." },
+      "The contrast: some verbs (know, understand, belong, want, prefer) are almost never used in the continuous — even when the meaning is 'right now'.",
+      { code: "I understand the brief. ✓   I am understanding the brief. ✗" }
     ]
   },
-
-  /* ── UNIT 2 ── Present Simple ── */
-  {
-    id: "unit2",
-    label: "Unit 2 — Present Simple",
-    title: "Present Simple",
-    subtitle: "I do — habits, routines, facts, and permanent situations",
-    ruleBox: {
-      heading: "Key Rule",
-      lines: [
-        "Use present simple for habits, routines, facts, and permanent situations.",
-        { code: "Andrii runs the weekly design review every Monday." },
-        { code: "The Kyiv studio uses Figma for all component work." },
-        "Third person singular (he/she/it) adds -s/-es. Questions and negatives use do/does.",
-        { code: "Does she know? — He doesn't attend stand-ups." }
-      ]
-    },
-    refCard: {
-      heading: "Third-person -s spelling",
-      items: [
-        { base: "work → works",      note: "add -s" },
-        { base: "finish → finishes", note: "add -es after -sh/-ch/-s/-x/-z" },
-        { base: "go → goes",         note: "add -es" },
-        { base: "study → studies",   note: "-y → -ies" },
-        { base: "have → has",        note: "irregular" }
-      ]
-    },
-    variations: [
-      /* Variation A */
-      {
-        label: "A",
-        exercises: [
-          {
-            type: "fill", id: "ex2A_1",
-            title: "Fill in the gaps",
-            instruction: "Complete with the correct present simple form. Use the verb in brackets.",
-            items: [
-              { id:"f2A_1_1", before:"Natalia", verb:"manage", after:"all client relationships for the Berlin studio — she's been there since 2022.", answer:"manages", wrongFeedback:"✗ manages\n💡 Third-person singular adds -s. Permanent role → simple.", correctFeedback:"✓ manages — third-person -s for a permanent role." },
-              { id:"f2A_1_2", before:"The conversion rate", verb:"not / improve", after:"unless we A/B test the onboarding copy first.", answer:"does not improve|doesn't improve", wrongFeedback:"✗ doesn't improve\n💡 Third-person negative: does not + base verb (no -s on main verb).", correctFeedback:"✓ doesn't improve — correct third-person negative." },
-              { id:"f2A_1_3", before:"Marcus", verb:"review", after:"every pull request before it goes live — he never skips it.", answer:"reviews", wrongFeedback:"✗ reviews\n💡 Consistent personal habit → simple. Third person → -s.", correctFeedback:"✓ reviews — routine action, third-person -s." },
-              { id:"f2A_1_4", before:"— How often", verb:"the Warsaw team / present", after:"an investor update? — Once a quarter.", answer:"does the warsaw team present|do the warsaw team present", wrongFeedback:"✗ does the Warsaw team present\n💡 Questions: Does/Do + subject + base verb (no -s).", correctFeedback:"✓ Does … present — base verb after auxiliary." },
-              { id:"f2A_1_5", before:"Leo", verb:"not / attend", after:"stand-ups on Fridays — he blocks that time for deep work.", answer:"does not attend|doesn't attend", wrongFeedback:"✗ doesn't attend\n💡 He/She/It → does not + base verb for negatives.", correctFeedback:"✓ doesn't attend — third-person negative." },
-              { id:"f2A_1_6", before:"The design system", verb:"include", after:"over 400 components — it covers every product surface.", answer:"includes", wrongFeedback:"✗ includes\n💡 A stable fact about the system → simple. Singular → -s.", correctFeedback:"✓ includes — present simple for a stable fact." }
-            ]
-          },
-          {
-            type: "mc", id: "ex2A_2",
-            title: "Choose the correct form",
-            instruction: "Select the best answer.",
-            items: [
-              { id:"mc2A_2_1", question:"— ___ you use Linear or Notion for sprint planning? — Linear for tasks, Notion for docs.", options:[
-                { text:"Are",  correct:false, explain:"'Are you use' is ungrammatical — present continuous takes are + verb-ing." },
-                { text:"Do",   correct:true,  explain:"✓ Present simple question: Do + subject + base verb. Asking about a habit." },
-                { text:"Does", correct:false, explain:"'Does' is for third-person singular. 'You' takes 'Do'." }
-              ]},
-              { id:"mc2A_2_2", question:"Oksana ___ from home on Wednesdays as part of the studio's hybrid policy.", options:[
-                { text:"work",       correct:false, explain:"Base form 'work' is not correct for third-person singular positive statements." },
-                { text:"is working", correct:false, explain:"Continuous implies a temporary situation. A fixed policy calls for simple." },
-                { text:"works",      correct:true,  explain:"✓ A regular schedule from a standing policy = present simple, -s." }
-              ]},
-              { id:"mc2A_2_3", question:"Andrii ___ the sprint scope once the team has voted in Linear. It's the standard process.", options:[
-                { text:"finalise",    correct:false, explain:"Base form without -s — not correct for third-person singular positive." },
-                { text:"finalises",   correct:true,  explain:"✓ Defined process Andrii always follows → simple, third-person -s." },
-                { text:"is finalising", correct:false, explain:"Continuous implies temporary; this is a standing process." }
-              ]},
-              { id:"mc2A_2_4", question:"— ___ Tomek know the pitch is rescheduled? — I'm not sure, check with him.", options:[
-                { text:"Is",   correct:false, explain:"'Know' is stative — never takes continuous forms like 'is knowing'." },
-                { text:"Does", correct:true,  explain:"✓ 'Know' is stative, always simple. Question: Does + subject + base verb." },
-                { text:"Do",   correct:false, explain:"'Tomek' is third-person singular — use 'does', not 'do'." }
-              ]}
-            ]
-          },
-          {
-            type: "situational", id: "ex2A_3",
-            title: "Form the question or negative",
-            instruction: "Read each situation. Write a natural present simple sentence — no word hints.",
-            items: [
-              { id:"s2A_3_1", prompt:"Ask Marcus how often he runs the design review.", answer:"how often do you run the design review|how often do you hold the design review|how often does marcus run the design review", wrongFeedback:"✗ How often do you run the design review?\n💡 Simple question for a routine: How often + do/does + subject + base verb?", correctFeedback:"✓ Present simple question for a repeated event." },
-              { id:"s2A_3_2", prompt:"Tell a new team member that Sara doesn't use Miro — the team switched to FigJam.", answer:"sara doesn't use miro|sara does not use miro|she doesn't use miro", wrongFeedback:"✗ Sara doesn't use Miro.\n💡 Third-person negative: doesn't + base verb (no -s on main verb).", correctFeedback:"✓ doesn't use — correct third-person negative." },
-              { id:"s2A_3_3", prompt:"Write an FAQ fact: the platform supports over 20 languages.", answer:"the platform supports over 20 languages|it supports over 20 languages|the platform supports more than 20 languages", wrongFeedback:"✗ The platform supports over 20 languages.\n💡 Facts use present simple. Third person singular → -s.", correctFeedback:"✓ supports — present simple for a stable fact." }
-            ]
-          }
-        ]
-      },
-      /* Variation B */
-      {
-        label: "B",
-        exercises: [
-          {
-            type: "correction", id: "ex2B_1",
-            title: "Fix the Slack message",
-            instruction: "Some lines have a verb form error. Write the corrected form, or 'correct'.",
-            preamble: "Hi Andrii,\n\nQuick onboarding note for the new Kyiv team member...",
-            items: [
-              { id:"c2B_1_1", line:"(1) Marcus reviews every PR before it goes to staging — that's the process.", answer:"correct", wrongFeedback:"✗ This line is correct. 'Reviews' and 'goes' — third-person -s for standing processes.", correctFeedback:"✓ Correct — both verbs use third-person -s for routines." },
-              { id:"c2B_1_2", line:"(2) Natalia don't attend the Monday sync — she's in client calls.", answer:"doesn't attend|does not attend", wrongFeedback:"✗ doesn't attend\n💡 Natalia = she (third-person singular) → 'doesn't', not 'don't'.", correctFeedback:"✓ doesn't attend — third-person singular negative." },
-              { id:"c2B_1_3", line:"(3) The team is meeting every Friday for the retrospective.", answer:"meets", wrongFeedback:"✗ meets\n💡 A fixed, recurring event = simple. 'Is meeting' implies a one-off arrangement.", correctFeedback:"✓ meets — standing weekly event uses present simple." },
-              { id:"c2B_1_4", line:"(4) Leo doesn't use Linear for anything personal — only for sprint tasks.", answer:"correct", wrongFeedback:"✗ This line is correct. 'Doesn't use' — third-person negative. Simple for a habit.", correctFeedback:"✓ Correct — doesn't + base verb, no -s. Well spotted." },
-              { id:"c2B_1_5", line:"(5) Daria always sends the weekly Loom update on Sunday evenings.", answer:"correct", wrongFeedback:"✗ This line is correct. 'Sends' — third-person -s for a reliable routine.", correctFeedback:"✓ Correct — 'sends' with -s for a weekly habit." },
-              { id:"c2B_1_6", line:"(6) The component library don't include dark mode tokens yet.", answer:"doesn't include|does not include", wrongFeedback:"✗ doesn't include\n💡 'The component library' is singular (it) → 'doesn't', not 'don't'.", correctFeedback:"✓ doesn't include — singular subject requires 'doesn't'." }
-            ]
-          },
-          {
-            type: "fill", id: "ex2B_2",
-            title: "Fill in the gaps",
-            instruction: "Complete with the correct present simple form.",
-            items: [
-              { id:"f2B_2_1", before:"Daria", verb:"run", after:"the brand guidelines workshop every time we onboard a new client.", answer:"runs", wrongFeedback:"✗ runs\n💡 Recurring event → simple. Third person → -s. 'Run' → 'runs'.", correctFeedback:"✓ runs — third-person -s for a regular responsibility." },
-              { id:"f2B_2_2", before:"— Where", verb:"the design team / sit", after:"in the new Warsaw office? — They have a whole floor.", answer:"does the design team sit|do the design team sit", wrongFeedback:"✗ does the design team sit\n💡 Simple question: Does/Do + subject + base verb.", correctFeedback:"✓ Does … sit — base verb in the question form." },
-              { id:"f2B_2_3", before:"The system", verb:"not / allow", after:"users to export PDFs unless they upgrade to Pro.", answer:"does not allow|doesn't allow", wrongFeedback:"✗ doesn't allow\n💡 A product rule → fact. Third-person negative: does not + base verb.", correctFeedback:"✓ doesn't allow — system fact, third-person negative." },
-              { id:"f2B_2_4", before:"Andrii", verb:"speak", after:"with the investors in Amsterdam twice a quarter.", answer:"speaks", wrongFeedback:"✗ speaks\n💡 Scheduled recurring contact → simple. Third person → -s.", correctFeedback:"✓ speaks — routine interaction, third-person -s." }
-            ]
-          },
-          {
-            type: "reorder", id: "ex2B_3",
-            title: "Build the sentence",
-            instruction: "Tap words to build the sentence.",
-            items: [
-              { id:"r2B_3_1", label:"Sentence 1", words:["Natalia","always","sends","a","project","update","before","the","sprint","ends"], answer:"natalia always sends a project update before the sprint ends", wrongFeedback:"✗ Natalia always sends a project update before the sprint ends." },
-              { id:"r2B_3_2", label:"Sentence 2", words:["Does","the","platform","support","dark","mode","out","of","the","box"], answer:"does the platform support dark mode out of the box", wrongFeedback:"✗ Does the platform support dark mode out of the box?" }
-            ]
-          }
-        ]
-      },
-      /* Variation C */
-      {
-        label: "C",
-        exercises: [
-          {
-            type: "mc", id: "ex2C_1",
-            title: "Spot the error",
-            instruction: "One option is correct — choose carefully.",
-            items: [
-              { id:"mc2C_1_1", question:"Sara ___ the creative brief before every project starts — it's mandatory.", options:[
-                { text:"is writing",  correct:false, explain:"Continuous = temporary/right now. A mandatory process every time = simple." },
-                { text:"write",       correct:false, explain:"Base form without -s is wrong for third-person singular positive." },
-                { text:"writes",      correct:true,  explain:"✓ Mandatory routine, third-person singular → -s." },
-                { text:"does write",  correct:false, explain:"'Does write' adds unnecessary emphasis — plain 'writes' is correct here." }
-              ]},
-              { id:"mc2C_1_2", question:"— ___ the Figma plugin sync automatically? — Yes, every time you save.", options:[
-                { text:"Do",       correct:false, explain:"'Do' is for I/you/we/they. 'The Figma plugin' is third-person singular." },
-                { text:"Does",     correct:true,  explain:"✓ Third-person singular question: Does + base verb." },
-                { text:"Is",       correct:false, explain:"'Is sync' mixes passive and continuous incorrectly." },
-                { text:"Are",      correct:false, explain:"'Are' is for plural or you — 'the plugin' is singular." }
-              ]},
-              { id:"mc2C_1_3", question:"Tomek ___ the sprint board every Monday to make sure all tasks are assigned.", options:[
-                { text:"updates",      correct:true,  explain:"✓ Weekly routine, third-person singular → -s." },
-                { text:"is updating",  correct:false, explain:"Continuous suggests he's doing it right now, not that it's a weekly habit." },
-                { text:"update",       correct:false, explain:"Base form — needs -s for third-person singular positive." },
-                { text:"do update",    correct:false, explain:"'Do' is not used in affirmative simple sentences (only in negatives/questions/emphasis)." }
-              ]},
-              { id:"mc2C_1_4", question:"The onboarding email sequence ___ eight steps and takes about five days to complete.", options:[
-                { text:"contain",      correct:false, explain:"'Contain' needs -s for third-person singular positive: 'contains'." },
-                { text:"is containing",correct:false, explain:"'Contain' is stative — describes a property, not an action. Always simple." },
-                { text:"contains",     correct:true,  explain:"✓ Fact about the sequence. Stative 'contain' → present simple, -s." },
-                { text:"are containing",correct:false, explain:"'Are' is for plural. 'The sequence' is singular." }
-              ]}
-            ]
-          },
-          {
-            type: "situational", id: "ex2C_2",
-            title: "Write the sentence",
-            instruction: "Construct a present simple sentence for each situation.",
-            items: [
-              { id:"s2C_2_1", prompt:"Explain to a client that Oksana handles all technical queries — it's her permanent responsibility.", answer:"oksana handles all technical queries|she handles all technical queries|oksana manages all technical queries", wrongFeedback:"✗ Oksana handles all technical queries.\n💡 Permanent responsibility → simple. Third person -s.", correctFeedback:"✓ handles — present simple for a standing role." },
-              { id:"s2C_2_2", prompt:"A new hire asks if the team uses Jira. Tell them no — the team uses Linear.", answer:"we don't use jira we use linear|we use linear not jira|the team uses linear|we don't use jira|the team doesn't use jira", wrongFeedback:"✗ We use Linear. / We don't use Jira.\n💡 Tool habits → simple. Negatives: don't/doesn't + base verb.", correctFeedback:"✓ Present simple for a permanent tool preference." },
-              { id:"s2C_2_3", prompt:"Write a product fact for a pitch deck: the API processes over 1 million requests per day.", answer:"the api processes over 1 million requests per day|the api handles over 1 million requests per day|it processes over 1 million requests a day", wrongFeedback:"✗ The API processes over 1 million requests per day.\n💡 Stable fact → simple. Third-person -s.", correctFeedback:"✓ processes — present simple for a quantified product fact." }
-            ]
-          },
-          {
-            type: "fill", id: "ex2C_3",
-            title: "Fill in the gaps",
-            instruction: "Complete with the correct present simple form.",
-            items: [
-              { id:"f2C_3_1", before:"— When", verb:"Leo / usually / start", after:"his deep-work blocks? — Around 7am.", answer:"does leo usually start|does leo start", wrongFeedback:"✗ does Leo usually start\n💡 Simple question about a routine: Does + subject + base verb (no -s).", correctFeedback:"✓ does … start — correct question form." },
-              { id:"f2C_3_2", before:"The Figma component", verb:"not / scale", after:"properly below 320px — we need to fix it.", answer:"does not scale|doesn't scale", wrongFeedback:"✗ doesn't scale\n💡 A bug (a fact right now) → simple. Third-person: doesn't + base verb.", correctFeedback:"✓ doesn't scale — product fact, third-person negative." },
-              { id:"f2C_3_3", before:"Every quarter, Natalia", verb:"fly", after:"to Amsterdam for the board meeting.", answer:"flies", wrongFeedback:"✗ flies\n💡 'Fly' → third-person: -y becomes -ies. Quarterly routine → simple.", correctFeedback:"✓ flies — fly → flies (-y to -ies), recurring routine." }
-            ]
-          }
-        ]
-      }
+  refCard: {
+    heading: "Common stative verbs — avoid continuous",
+    items: [
+      { base: "know / understand / believe", note: "mental states" },
+      { base: "want / need / prefer", note: "desires" },
+      { base: "belong / contain / consist", note: "relationships & composition" },
+      { base: "seem / appear / mean", note: "perception & logic" },
+      { base: "like / love / hate", note: "feelings — but 'I'm loving this sprint' is informal/accepted" }
     ]
   },
-
-  /* ── UNIT 3 ── Continuous vs Simple ── */
-  {
-    id: "unit3",
-    label: "Unit 3 — Continuous vs Simple",
-    title: "Continuous vs Simple",
-    subtitle: "I am doing vs I do — knowing when to use each",
-    ruleBox: {
-      heading: "Key Rule",
-      lines: [
-        "Continuous = temporary / in progress around now. Simple = permanent, habitual, or always true.",
-        { code: "Leo is leading the sprint this week. (temporary)" },
-        { code: "Leo leads the design team. (permanent role)" },
-        "Stative verbs (know, want, need, believe, own, prefer, contain) almost never take -ing.",
-        { code: "✗ I am knowing the answer.  ✓ I know the answer." }
+  variations: [
+    {
+      label: "A",
+      exercises: [
+        {
+          id: "ex1A_1",
+          type: "fill",
+          instruction: "Put each verb in brackets into the correct present tense — present simple or present continuous. Think carefully about whether the action is a routine, a current activity, or a temporary situation.",
+          items: [
+            {
+              id: "f1A_1_1",
+              prompt: "Andrii ___ (finalise) the investor update right now — he asked not to be disturbed.",
+              answer: "is finalising",
+              wrongFeedback: "✗ is finalising\n💡 'Right now' signals an action in progress at this moment — use present continuous (is/are + -ing), not present simple.",
+              correctFeedback: "✓ Correct — 'right now' calls for the present continuous."
+            },
+            {
+              id: "f1A_1_2",
+              prompt: "Our design system ___ (follow) an 8-point grid — every component is built on it.",
+              answer: "follows",
+              wrongFeedback: "✗ follows\n💡 This is a permanent rule about how the design system works — a fact that is always true — so use present simple.",
+              correctFeedback: "✓ Correct — a standing rule or permanent fact uses the present simple."
+            },
+            {
+              id: "f1A_1_3",
+              prompt: "Oksana ___ (not use) Loom for client handoffs anymore — she switched to Notion pages.",
+              answer: "doesn't use",
+              wrongFeedback: "✗ doesn't use\n💡 'Anymore' indicates a changed habit, but the statement is still a general fact about her current routine — present simple negative is correct here.",
+              correctFeedback: "✓ Correct — a changed but settled habit stays in the present simple."
+            },
+            {
+              id: "f1A_1_4",
+              prompt: "Why ___ Leo ___ (sit) in the Figma file at this hour? The sprint review ___ (end) in ten minutes.",
+              answer: "is Leo sitting / ends",
+              wrongFeedback: "✗ is … sitting / ends\n💡 'At this hour' asks about a current action (continuous); a scheduled event on the calendar uses present simple for the future timetable sense.",
+              correctFeedback: "✓ Correct — ongoing action vs. scheduled event — two different tense choices in one sentence."
+            },
+            {
+              id: "f1A_1_5",
+              prompt: "The onboarding flow ___ (consist) of six screens — Tomek mapped it all out in Miro last week.",
+              answer: "consists",
+              wrongFeedback: "✗ consists\n💡 'Consist' is a stative verb describing composition — it is never used in the continuous form.",
+              correctFeedback: "✓ Correct — 'consist' is a stative verb; use present simple."
+            },
+            {
+              id: "f1A_1_6",
+              prompt: "Natalia ___ (write) the creative brief for the rebrand — she says it'll be ready by 3 pm.",
+              answer: "is writing",
+              wrongFeedback: "✗ is writing\n💡 She is in the middle of writing it right now (a temporary activity in progress) — present continuous is needed.",
+              correctFeedback: "✓ Correct — a temporary, in-progress task uses the present continuous."
+            },
+            {
+              id: "f1A_1_7",
+              prompt: "This component library ___ (belong) to the shared Figma workspace — nobody should move it.",
+              answer: "belongs",
+              wrongFeedback: "✗ belongs\n💡 'Belong' is a stative verb expressing a fixed relationship — it takes the present simple, never the continuous.",
+              correctFeedback: "✓ Correct — 'belong' is stative; present simple only."
+            }
+          ]
+        },
+        {
+          id: "ex1A_2",
+          type: "mc",
+          instruction: "Choose the best option. One answer is clearly best; watch for traps.",
+          items: [
+            {
+              id: "mc1A_2_1",
+              prompt: "Daria _____ the A/B test results every Monday morning before the standup.",
+              options: [
+                { label: "A", text: "is reviewing", explain: "✗ 'Every Monday morning' signals a repeated routine — continuous implies a one-off activity in progress right now." },
+                { label: "B", text: "reviews", explain: "✓ A scheduled, repeated action on a fixed day is a routine — present simple is the right choice." },
+                { label: "C", text: "is reviewed", explain: "✗ This is passive voice — but Daria performs the review herself; no passive needed." },
+                { label: "D", text: "has reviewed", explain: "✗ Present perfect is not used for regular scheduled habits; it focuses on a result connected to now, not a routine." }
+              ],
+              correct: "B"
+            },
+            {
+              id: "mc1A_2_2",
+              prompt: "I can't jump on Zoom right now — I _____ the go-to-market slide and I've lost my train of thought twice already.",
+              options: [
+                { label: "A", text: "write", explain: "✗ Present simple describes a habit, not what you are doing at this exact moment." },
+                { label: "B", text: "am writing", explain: "✓ The speaker is mid-task right now ('I've lost my train of thought') — present continuous captures the ongoing action." },
+                { label: "C", text: "wrote", explain: "✗ Past simple means the writing is finished — but the speaker hasn't finished yet." },
+                { label: "D", text: "am written", explain: "✗ This is grammatically incoherent — 'write' is active and cannot be used this way." }
+              ],
+              correct: "B"
+            },
+            {
+              id: "mc1A_2_3",
+              prompt: "Marcus _____ that the new conversion rate figures are misleading — he wants a second look at the raw data.",
+              options: [
+                { label: "A", text: "is thinking", explain: "✗ Here 'think' means 'believe' or 'have an opinion' — a stative use — so continuous is wrong, even though the opinion is current." },
+                { label: "B", text: "thinks", explain: "✓ When 'think' means 'believe/hold an opinion', it is stative — present simple is required." },
+                { label: "C", text: "has thought", explain: "✗ Present perfect would imply a completed thought connected to now, not an ongoing opinion." },
+                { label: "D", text: "is been thinking", explain: "✗ This form does not exist in English." }
+              ],
+              correct: "B"
+            },
+            {
+              id: "mc1A_2_4",
+              prompt: "This quarter the team _____ a lot more on stakeholder communication — it's a deliberate change from Q2.",
+              options: [
+                { label: "A", text: "focuses", explain: "✗ 'This quarter' frames a temporary, evolving change — not an established permanent routine — so simple present is too static here." },
+                { label: "B", text: "is focusing", explain: "✓ 'This quarter' signals a temporary shift in priority that is currently underway — present continuous fits a changing or evolving situation." },
+                { label: "C", text: "focus", explain: "✗ Same issue as A — present simple without the subject-verb agreement marker, still too permanent-sounding." },
+                { label: "D", text: "was focusing", explain: "✗ Past continuous would mean the quarter is over — but 'this quarter' is still ongoing." }
+              ],
+              correct: "B"
+            }
+          ]
+        },
+        {
+          id: "ex1A_3",
+          type: "situational",
+          instruction: "Write a natural English sentence for each situation. Use the present simple or present continuous as appropriate.",
+          items: [
+            {
+              id: "s1A_3_1",
+              prompt: "You are mid-sprint and a colleague texts asking if Sara is free for a quick call. Explain that she is currently reviewing design tokens in Figma and can't be interrupted.",
+              answer: "Sara is reviewing the design tokens in Figma right now — she can't be interrupted. | She's reviewing design tokens in Figma at the moment, so she's not free.",
+              correctFeedback: "✓ Present continuous — an in-progress, momentary activity."
+            },
+            {
+              id: "s1A_3_2",
+              prompt: "A new team member asks how often your studio holds retrospectives. Tell them it happens every two weeks, at the end of each sprint.",
+              answer: "We hold a retrospective every two weeks, at the end of each sprint. | The team runs a retro at the end of every sprint — so every two weeks.",
+              correctFeedback: "✓ Present simple — a fixed, repeated routine."
+            },
+            {
+              id: "s1A_3_3",
+              prompt: "Your manager notices you seem distracted. Explain that you understand the brief perfectly — you are just getting used to the new component structure.",
+              answer: "I understand the brief completely — I'm just getting used to the new component structure. | I understand it fine; I'm still getting my head around the component structure.",
+              correctFeedback: "✓ 'Understand' is stative → present simple; 'getting used to' is a process in progress → present continuous."
+            }
+          ]
+        }
       ]
     },
-    refCard: {
-      heading: "Stative verbs — never (or rarely) continuous",
-      items: [
-        { base: "know",   note: "understand" },
-        { base: "want",   note: "need" },
-        { base: "own",    note: "contain" },
-        { base: "prefer", note: "believe" },
-        { base: "hate",   note: "love / like" },
-        { base: "seem",   note: "appear" }
+    {
+      label: "B",
+      exercises: [
+        {
+          id: "ex1B_1",
+          type: "correction",
+          instruction: "The following is a Slack thread from the #design-ops channel. Some messages contain grammar errors; others are correct. Identify each error, correct it, and explain why. If a line is correct, say so.",
+          preamble: "Channel: #design-ops | Thread: 'Component handoff process — Monday standup recap'",
+          items: [
+            {
+              id: "c1B_1_1",
+              prompt: "Tomek [10:03]: I'm not understanding why the spacing values keep changing between handoff and dev implementation.",
+              isError: true,
+              correction: "I don't understand why the spacing values keep changing between handoff and dev implementation.",
+              feedback: "✗ don't understand\n💡 'Understand' is a stative verb expressing a mental state — it takes the present simple, never the continuous, even when the feeling is happening right now."
+            },
+            {
+              id: "c1B_1_2",
+              prompt: "Oksana [10:05]: We currently run a manual check after every export — it takes about 20 minutes.",
+              isError: false,
+              correction: null,
+              feedback: "✓ Correct — 'currently run' is a valid use of the present simple for an established process (adverb 'currently' adds emphasis without requiring continuous)."
+            },
+            {
+              id: "c1B_1_3",
+              prompt: "Leo [10:07]: Andrii is work on an automated token sync script right now — it should fix the root cause.",
+              isError: true,
+              correction: "Andrii is working on an automated token sync script right now — it should fix the root cause.",
+              feedback: "✗ is working\n💡 Present continuous requires the -ing form of the main verb (is working), not the bare infinitive (is work)."
+            },
+            {
+              id: "c1B_1_4",
+              prompt: "Daria [10:09]: The script Andrii writes uses the same API as our existing Figma plugin, so integration should be straightforward.",
+              isError: true,
+              correction: "The script Andrii is writing uses the same API as our existing Figma plugin, so integration should be straightforward.",
+              feedback: "✗ is writing\n💡 'The script Andrii writes' sounds like a habitual action (he writes scripts regularly). Since the script is being actively created right now, present continuous (is writing) is needed."
+            },
+            {
+              id: "c1B_1_5",
+              prompt: "Marcus [10:12]: Our Webflow staging environment doesn't sync with the Figma library automatically — that's the core problem.",
+              isError: false,
+              correction: null,
+              feedback: "✓ Correct — 'doesn't sync' is the present simple negative, appropriate for a permanent technical limitation."
+            },
+            {
+              id: "c1B_1_6",
+              prompt: "Sara [10:15]: I'm preferring to wait until the script is ready before we update the handoff checklist.",
+              isError: true,
+              correction: "I prefer to wait until the script is ready before we update the handoff checklist.",
+              feedback: "✗ prefer\n💡 'Prefer' is a stative verb expressing a preference — it is not used in the continuous form. Use present simple: 'I prefer'."
+            }
+          ]
+        },
+        {
+          id: "ex1B_2",
+          type: "fill",
+          instruction: "Complete each sentence with the correct present tense form of the verb in brackets. Pay attention to stative verbs, temporary situations, and scheduled routines.",
+          items: [
+            {
+              id: "f1B_2_1",
+              prompt: "The Miro board ___ (contain) every wireframe from discovery to final handoff — please don't archive it.",
+              answer: "contains",
+              wrongFeedback: "✗ contains\n💡 'Contain' is a stative verb describing what is inside the board — a fact, not an action in progress. Use present simple.",
+              correctFeedback: "✓ Correct — 'contain' is stative; present simple only."
+            },
+            {
+              id: "f1B_2_2",
+              prompt: "___ Natalia ___ (attend) the Zoom call with the Warsaw client right now, or has it finished?",
+              answer: "Is Natalia attending",
+              wrongFeedback: "✗ Is Natalia attending\n💡 'Right now' shows we want to know about an action in progress — use present continuous question form: Is + subject + -ing.",
+              correctFeedback: "✓ Correct — present continuous question for a current, in-progress event."
+            },
+            {
+              id: "f1B_2_3",
+              prompt: "The conversion rate ___ (drop) every time we push an update without A/B testing it first — it's a clear pattern.",
+              answer: "drops",
+              wrongFeedback: "✗ drops\n💡 'Every time' signals a repeated pattern — a general truth about what happens. Use the present simple.",
+              correctFeedback: "✓ Correct — a repeated cause-and-effect pattern is expressed with the present simple."
+            },
+            {
+              id: "f1B_2_4",
+              prompt: "This week Leo ___ (redesign) the onboarding flow — it's a temporary project alongside his usual work.",
+              answer: "is redesigning",
+              wrongFeedback: "✗ is redesigning\n💡 'This week' frames a temporary task that is currently underway but will end — present continuous is correct for this kind of temporary situation.",
+              correctFeedback: "✓ Correct — 'this week' + a temporary task = present continuous."
+            },
+            {
+              id: "f1B_2_5",
+              prompt: "Tomek ___ (know) the Figma API inside out — he built half the plugins we use.",
+              answer: "knows",
+              wrongFeedback: "✗ knows\n💡 'Know' is a stative verb — it describes a state of knowledge, not an activity. Use the present simple.",
+              correctFeedback: "✓ Correct — 'know' is stative; present simple."
+            },
+            {
+              id: "f1B_2_6",
+              prompt: "Why ___ the Linear board ___ (show) 34 open issues when we closed twelve yesterday?",
+              answer: "is the Linear board showing",
+              wrongFeedback: "✗ is the Linear board showing\n💡 The speaker is looking at the board now and is puzzled by what it is currently displaying — present continuous is correct for what is happening at this moment.",
+              correctFeedback: "✓ Correct — a current, visible state observed right now uses the present continuous."
+            }
+          ]
+        },
+        {
+          id: "ex1B_3",
+          type: "reorder",
+          instruction: "Put the words in the correct order to form a grammatically correct and natural-sounding sentence.",
+          items: [
+            {
+              id: "r1B_3_1",
+              words: ["the", "team", "is", "testing", "three", "different", "landing", "page", "variants", "this", "sprint"],
+              answer: "the team is testing three different landing page variants this sprint",
+              correctFeedback: "✓ Present continuous — a temporary activity running for the duration of this sprint."
+            },
+            {
+              id: "r1B_3_2",
+              words: ["marcus", "always", "shares", "the", "investor", "update", "on", "friday", "afternoons"],
+              answer: "marcus always shares the investor update on friday afternoons",
+              correctFeedback: "✓ Present simple with 'always' — a fixed personal routine."
+            }
+          ]
+        }
       ]
     },
-    variations: [
-      /* Variation A */
-      {
-        label: "A",
-        exercises: [
-          {
-            type: "fill", id: "ex3A_1",
-            title: "Fill in the gaps",
-            instruction: "Choose simple or continuous. Use the verb in brackets — tense is yours.",
-            items: [
-              { id:"f3A_1_1", before:"Tomek usually works remotely, but this week he", verb:"visit", after:"the Berlin office for the annual design summit.", answer:"is visiting", wrongFeedback:"✗ is visiting\n💡 'This week' + unusual temporary arrangement → continuous.", correctFeedback:"✓ is visiting — temporary exception to a normal routine." },
-              { id:"f3A_1_2", before:"Oksana", verb:"know", after:"the Figma API better than anyone on the team.", answer:"knows", wrongFeedback:"✗ knows\n💡 'Know' is stative. Stative verbs don't take continuous. Use simple.", correctFeedback:"✓ knows — stative verb, always simple." },
-              { id:"f3A_1_3", before:"I", verb:"not / understand", after:"why the conversion rate dropped after the A/B test.", answer:"don't understand|do not understand", wrongFeedback:"✗ don't understand\n💡 'Understand' is stative. Never 'am not understanding'.", correctFeedback:"✓ don't understand — stative negative, simple." },
-              { id:"f3A_1_4", before:"Marcus", verb:"write", after:"all the UX copy for the new onboarding flow — he's been at it since Monday.", answer:"is writing", wrongFeedback:"✗ is writing\n💡 'Since Monday' + ongoing task → continuous.", correctFeedback:"✓ is writing — ongoing activity in progress." },
-              { id:"f3A_1_5", before:"Our lead developer", verb:"push", after:"code every morning before the stand-up — she never misses it.", answer:"pushes", wrongFeedback:"✗ pushes\n💡 'Every morning' + never = reliable routine → simple, third-person -s.", correctFeedback:"✓ pushes — daily habit, present simple." },
-              { id:"f3A_1_6", before:"Natalia", verb:"prefer", after:"async updates over live stand-ups — she always sends a Loom.", answer:"prefers", wrongFeedback:"✗ prefers\n💡 'Prefer' is stative → simple. Third person → -s.", correctFeedback:"✓ prefers — stative verb, simple, third-person -s." },
-              { id:"f3A_1_7", before:"The Lviv team", verb:"use", after:"Craft for documentation this sprint, but they usually work in Notion.", answer:"is using|are using", wrongFeedback:"✗ is/are using\n💡 'This sprint' = temporary change from the norm → continuous.", correctFeedback:"✓ is/are using — temporary change, continuous." }
-            ]
-          },
-          {
-            type: "mc", id: "ex3A_2",
-            title: "Continuous or simple?",
-            instruction: "Choose the correct form. At least one surprising answer.",
-            items: [
-              { id:"mc3A_2_1", question:"I ___ this Figma plugin makes the handoff much faster — total game changer.", options:[
-                { text:"am thinking",  correct:false, explain:"'Think' as opinion (= believe) is stative. Must use present simple." },
-                { text:"think",        correct:true,  explain:"✓ Opinion 'think' (= believe) is stative → always present simple." },
-                { text:"am believing", correct:false, explain:"'Believe' is also stative, but 'think' is the right verb here." }
-              ]},
-              { id:"mc3A_2_2", question:"Sara ___ to Daria about the revised pitch deck. Can you wait two minutes?", options:[
-                { text:"talks",      correct:false, explain:"Simple describes a habit. Here we mean 'right at this moment'." },
-                { text:"is talking", correct:true,  explain:"✓ In progress right now → continuous." },
-                { text:"does talk",  correct:false, explain:"Emphatic simple — for contrast, not for actions in progress." }
-              ]},
-              { id:"mc3A_2_3", question:"This component ___ three props — check the Figma docs.", options:[
-                { text:"is containing", correct:false, explain:"'Contain' is stative — always simple, never continuous." },
-                { text:"contains",      correct:true,  explain:"✓ Property of the component (stative 'contain') → simple." },
-                { text:"does contain",  correct:false, explain:"'Does contain' adds unnecessary emphasis. Plain 'contains' is natural." }
-              ]},
-              { id:"mc3A_2_4", question:"Andrii usually writes the investor update, but this month Oksana ___ it.", options:[
-                { text:"writes",     correct:false, explain:"Simple = permanent habit. 'This month' marks it as temporary." },
-                { text:"is writing", correct:true,  explain:"✓ Temporary arrangement this month → continuous." },
-                { text:"write",      correct:false, explain:"Base form needs is/am/are for continuous." }
-              ]}
-            ]
-          },
-          {
-            type: "correction", id: "ex3A_3",
-            title: "Fix the onboarding email",
-            instruction: "Write the corrected verb form, or 'correct' if the line is fine.",
-            preamble: "Hi Daria,\n\nWelcome to the team! Quick overview of how we work...",
-            items: [
-              { id:"c3A_3_1", line:"(1) Our team is preferring async updates — send a Loom instead of attending every call.", answer:"prefers", wrongFeedback:"✗ prefers\n💡 'Prefer' is stative. Cannot say 'is preferring'. Use simple.", correctFeedback:"✓ prefers — stative verb, must use present simple." },
-              { id:"c3A_3_2", line:"(2) Marcus writes all the UX copy for new features — he's the main product voice.", answer:"correct", wrongFeedback:"✗ This line is correct. 'Writes' = simple for a permanent role.", correctFeedback:"✓ Correct — simple for a standing responsibility." },
-              { id:"c3A_3_3", line:"(3) This week, we are finishing the final sprint before the product launch.", answer:"correct", wrongFeedback:"✗ This line is correct. 'This week' + temporary task → continuous is right.", correctFeedback:"✓ Correct — temporary project-specific activity, continuous." },
-              { id:"c3A_3_4", line:"(4) I am thinking you'll really enjoy the design review format once you see it.", answer:"think", wrongFeedback:"✗ think\n💡 'Think' used as opinion (= believe) is stative → always simple.", correctFeedback:"✓ think — stative opinion use, present simple." },
-              { id:"c3A_3_5", line:"(5) Natalia is usually presenting the Q results each quarter — she's really clear.", answer:"presents", wrongFeedback:"✗ presents\n💡 'Usually' = habitual routine → simple. Not continuous.", correctFeedback:"✓ presents — 'usually' signals a habit, use simple." }
-            ]
-          }
-        ]
-      },
-      /* Variation B */
-      {
-        label: "B",
-        exercises: [
-          {
-            type: "fill", id: "ex3B_1",
-            title: "Fill in the gaps",
-            instruction: "Simple or continuous? Use the verb in brackets.",
-            items: [
-              { id:"f3B_1_1", before:"The platform", verb:"process", after:"over a million API calls a day — the infrastructure is solid.", answer:"processes", wrongFeedback:"✗ processes\n💡 A stable product fact → simple. Third-person -s.", correctFeedback:"✓ processes — fact about the platform, simple." },
-              { id:"f3B_1_2", before:"Leo", verb:"not / read", after:"the full spec right now — he's in a call. Can you wait?", answer:"is not reading|isn't reading", wrongFeedback:"✗ is not reading\n💡 'Right now' = in progress → continuous negative.", correctFeedback:"✓ isn't reading — action not in progress right now." },
-              { id:"f3B_1_3", before:"I", verb:"want", after:"to move the deadline to Friday — the copy isn't ready.", answer:"want", wrongFeedback:"✗ want\n💡 'Want' is stative → always simple. Never 'am wanting'.", correctFeedback:"✓ want — stative verb, simple." },
-              { id:"f3B_1_4", before:"Daria usually handles the client handoff, but this quarter Tomek", verb:"take", after:"the lead.", answer:"is taking", wrongFeedback:"✗ is taking\n💡 Temporary arrangement ('this quarter') → continuous.", correctFeedback:"✓ is taking — temporary change, continuous." },
-              { id:"f3B_1_5", before:"The Kyiv team", verb:"hold", after:"a retrospective every second Friday — it's non-negotiable.", answer:"holds", wrongFeedback:"✗ holds\n💡 Recurring fixed event → simple. Collective noun singular → -s.", correctFeedback:"✓ holds — standing biweekly event, simple." }
-            ]
-          },
-          {
-            type: "situational", id: "ex3B_2",
-            title: "Simple or continuous — you decide",
-            instruction: "Read the situation. Choose the right tense and write the full sentence.",
-            items: [
-              { id:"s3B_2_1", prompt:"A client asks what Leo does at the company. Explain his permanent role: he leads the product design team.", answer:"he leads the product design team|leo leads the product design team|he manages the product design team", wrongFeedback:"✗ He leads the product design team.\n💡 Permanent job role = simple. Not 'is leading' — that would suggest it's temporary.", correctFeedback:"✓ leads — simple for a permanent role." },
-              { id:"s3B_2_2", prompt:"Marcus asks why you haven't replied. Explain you're writing a creative brief right now.", answer:"i am writing a creative brief|i'm writing a creative brief|i am working on a creative brief|i'm working on a creative brief", wrongFeedback:"✗ I'm writing a creative brief right now.\n💡 Action in progress at this moment → continuous.", correctFeedback:"✓ am writing — in-progress action, continuous." },
-              { id:"s3B_2_3", prompt:"A new hire seems confused about the sprint tool. Tell them you prefer Linear — not Jira.", answer:"i want linear|we want linear|we use linear|i prefer linear|we prefer linear|we don't use jira we use linear", wrongFeedback:"✗ We prefer Linear. / I want Linear.\n💡 'Want' and 'prefer' are stative → always simple.", correctFeedback:"✓ want / prefer — stative verbs, present simple." }
-            ]
-          },
-          {
-            type: "reorder", id: "ex3B_3",
-            title: "Build the sentence",
-            instruction: "Tap words to build the sentence.",
-            items: [
-              { id:"r3B_3_1", label:"Sentence 1", words:["Andrii","is","leading","the","rebrand","project","this","quarter"], answer:"andrii is leading the rebrand project this quarter", wrongFeedback:"✗ Andrii is leading the rebrand project this quarter." },
-              { id:"r3B_3_2", label:"Sentence 2", words:["The","Kyiv","studio","always","sends","a","weekly","Loom","update"], answer:"the kyiv studio always sends a weekly loom update", wrongFeedback:"✗ The Kyiv studio always sends a weekly Loom update." }
-            ]
-          }
-        ]
-      },
-      /* Variation C */
-      {
-        label: "C",
-        exercises: [
-          {
-            type: "mc", id: "ex3C_1",
-            title: "Spot the error",
-            instruction: "One option is correct — choose carefully. Stative verb traps included.",
-            items: [
-              { id:"mc3C_1_1", question:"I ___ the new brief is too vague — we need more detail before we can scope it.", options:[
-                { text:"am thinking",  correct:false, explain:"'Think' as opinion = stative. Always simple — never 'am thinking' in this sense." },
-                { text:"think",        correct:true,  explain:"✓ Opinion 'think' (= believe) is stative. Present simple." },
-                { text:"am believing", correct:false, explain:"'Believe' is stative, but 'think' is the correct word for this sentence." },
-                { text:"believes",     correct:false, explain:"'Believes' is third person, but the subject is 'I'." }
-              ]},
-              { id:"mc3C_1_2", question:"The design team ___ the new brand guidelines to all studio leads this week.", options:[
-                { text:"sends",        correct:false, explain:"Simple = routine. 'This week' signals a one-time temporary action." },
-                { text:"is sending",   correct:true,  explain:"✓ A specific temporary action happening this week → continuous." },
-                { text:"are sending",  correct:false, explain:"'The design team' is usually treated as singular → 'is sending'. ('are' could be accepted informally, but 'is' is safer here.)" },
-                { text:"send",         correct:false, explain:"Base form — needs is/are + verb-ing for continuous." }
-              ]},
-              { id:"mc3C_1_3", question:"Our analytics dashboard ___ the real-time data — there's a 30-second delay.", options:[
-                { text:"isn't showing",  correct:true,  explain:"✓ Observable issue right now → continuous negative." },
-                { text:"doesn't show",   correct:false, explain:"Simple implies a permanent deficiency. Here it's a current, possibly temporary issue." },
-                { text:"don't show",     correct:false, explain:"'Our dashboard' is singular — needs 'doesn't', and the context calls for continuous anyway." },
-                { text:"not showing",    correct:false, explain:"Missing the auxiliary 'is' — needs 'is not showing'." }
-              ]},
-              { id:"mc3C_1_4", question:"Marcus ___ six components a day on average — that's his usual output.", options:[
-                { text:"is building",  correct:false, explain:"Six components a day 'on average' = a regular output pattern, not a current temporary activity." },
-                { text:"build",        correct:false, explain:"Base form without -s — needs third-person -s for Marcus (he)." },
-                { text:"builds",       correct:true,  explain:"✓ Average/routine output → present simple, third-person -s." },
-                { text:"does build",   correct:false, explain:"Emphatic form — unnecessary here. Plain 'builds' is natural." }
-              ]}
-            ]
-          },
-          {
-            type: "correction", id: "ex3C_2",
-            title: "Fix the design brief",
-            instruction: "Write the corrected verb, or 'correct' if the line is fine.",
-            preamble: "Project brief — Kyiv rebrand, Q2\nStatus update for the Amsterdam team:",
-            items: [
-              { id:"c3C_2_1", line:"(1) Oksana is knowing every edge case in the component library.", answer:"knows", wrongFeedback:"✗ knows\n💡 'Know' is stative — never 'is knowing'. Always present simple.", correctFeedback:"✓ knows — stative verb, simple." },
-              { id:"c3C_2_2", line:"(2) The Lviv team is handling the illustration set this sprint.", answer:"correct", wrongFeedback:"✗ This line is correct. 'This sprint' = temporary → continuous.", correctFeedback:"✓ Correct — temporary sprint task, continuous is right." },
-              { id:"c3C_2_3", line:"(3) Sara is wanting to move the deadline to next Monday.", answer:"wants", wrongFeedback:"✗ wants\n💡 'Want' is stative → always simple. 'Is wanting' is not standard.", correctFeedback:"✓ wants — stative verb, must use simple." },
-              { id:"c3C_2_4", line:"(4) Tomek reviews all stakeholder feedback before the final sign-off — that's his role.", answer:"correct", wrongFeedback:"✗ This line is correct. 'Reviews' = simple for a permanent responsibility.", correctFeedback:"✓ Correct — standing process, present simple." },
-              { id:"c3C_2_5", line:"(5) We are usually presenting the results in a Loom — not a live call.", answer:"usually present", wrongFeedback:"✗ usually present\n💡 'Usually' signals a habit → simple. 'Are presenting' implies a current temporary action.", correctFeedback:"✓ usually present — habitual practice, present simple." }
-            ]
-          },
-          {
-            type: "fill", id: "ex3C_3",
-            title: "Fill in the gaps — mixed challenge",
-            instruction: "Seven sentences. Choose simple or continuous carefully.",
-            items: [
-              { id:"f3C_3_1", before:"The onboarding flow", verb:"need", after:"a complete rewrite — it's confusing new users.", answer:"needs", wrongFeedback:"✗ needs\n💡 'Need' is stative → always simple. Third-person -s.", correctFeedback:"✓ needs — stative, simple, -s." },
-              { id:"f3C_3_2", before:"Daria", verb:"present", after:"the Q2 brand results to the board as we speak.", answer:"is presenting", wrongFeedback:"✗ is presenting\n💡 'As we speak' = right now → continuous.", correctFeedback:"✓ is presenting — in progress at this moment." },
-              { id:"f3C_3_3", before:"Leo", verb:"not / believe", after:"the A/B results are accurate — the sample size is too small.", answer:"does not believe|doesn't believe", wrongFeedback:"✗ doesn't believe\n💡 'Believe' is stative → simple. Third-person negative: doesn't + base verb.", correctFeedback:"✓ doesn't believe — stative negative, simple." },
-              { id:"f3C_3_4", before:"The Berlin and Warsaw teams", verb:"merge", after:"their design systems this quarter — it's a big initiative.", answer:"are merging", wrongFeedback:"✗ are merging\n💡 'This quarter' = temporary major project → continuous, plural subject.", correctFeedback:"✓ are merging — plural, temporary initiative, continuous." }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-];
+    {
+      label: "C",
+      exercises: [
+        {
+          id: "ex1C_1",
+          type: "mc",
+          instruction: "Choose the best option. At least one question has a tempting but wrong 'obvious' answer.",
+          items: [
+            {
+              id: "mc1C_1_1",
+              prompt: "I _____ the client wants a full rebrand — but the brief only mentions updating the logo.",
+              options: [
+                { label: "A", text: "am not thinking", explain: "✗ Here 'think' expresses an opinion or belief — a stative meaning — so continuous is wrong even though the thought is happening now." },
+                { label: "B", text: "don't think", explain: "✓ 'Think' in the sense of 'believe/have an opinion' is stative — present simple is required." },
+                { label: "C", text: "wasn't thinking", explain: "✗ Past continuous would refer to a moment in the past — but the speaker is expressing a current opinion." },
+                { label: "D", text: "haven't thought", explain: "✗ Present perfect implies the thinking is a completed event with a present result — not appropriate for expressing an ongoing opinion." }
+              ],
+              correct: "B"
+            },
+            {
+              id: "mc1C_1_2",
+              prompt: "Andrii _____ his Webflow portfolio every few months to keep it current with recent projects.",
+              options: [
+                { label: "A", text: "is updating", explain: "✗ 'Every few months' clearly marks this as a recurring habit — continuous implies he is doing it at this very moment, which contradicts the habitual signal." },
+                { label: "B", text: "updates", explain: "✓ 'Every few months' is a frequency marker signalling a regular routine — present simple is the correct tense." },
+                { label: "C", text: "has updated", explain: "✗ Present perfect focuses on a completed action with a present result — not on the repeated habit itself." },
+                { label: "D", text: "update", explain: "✗ Missing the third-person singular -s; 'Andrii update' is grammatically incorrect." }
+              ],
+              correct: "B"
+            },
+            {
+              id: "mc1C_1_3",
+              prompt: "The new component library _____ of over 200 atoms, molecules, and organisms — it took six months to build.",
+              options: [
+                { label: "A", text: "is consisting", explain: "✗ 'Consist' is a stative verb describing composition — it is never used in the continuous form in standard English." },
+                { label: "B", text: "consists", explain: "✓ 'Consist' is stative — it describes what the library contains as a fact. Present simple is required." },
+                { label: "C", text: "is consisted", explain: "✗ 'Consist' is not used in the passive; this construction does not exist." },
+                { label: "D", text: "consisted", explain: "✗ Past simple would imply the library no longer has those components — but the library still exists." }
+              ],
+              correct: "B"
+            },
+            {
+              id: "mc1C_1_4",
+              prompt: "Sara _____ to Amsterdam next Tuesday for a stakeholder workshop — her flights are already booked.",
+              options: [
+                { label: "A", text: "travels", explain: "✗ Present simple for a personal arrangement is less natural here; it works for timetables (trains, flights) but not for personal plans." },
+                { label: "B", text: "will travel", explain: "✗ 'Will' here sounds like a prediction or spontaneous decision, but the flights are already booked — it's an arrangement, not a prediction." },
+                { label: "C", text: "is travelling", explain: "✓ A personal arrangement that is already fixed and booked is best expressed with the present continuous used for the future." },
+                { label: "D", text: "has travelled", explain: "✗ Present perfect refers to a past action with a present result — the trip hasn't happened yet." }
+              ],
+              correct: "C"
+            }
+          ]
+        },
+        {
+          id: "ex1C_2",
+          type: "situational",
+          instruction: "Write one clear, natural English sentence for each situation. Choose the tense carefully.",
+          items: [
+            {
+              id: "s1C_2_1",
+              prompt: "A stakeholder emails asking what Oksana's role on the project is. Explain that she leads the UX research — it's her permanent responsibility on the team.",
+              answer: "Oksana leads the UX research on this project — it's her core responsibility. | Oksana is responsible for all the UX research; she owns that area.",
+              correctFeedback: "✓ Present simple — a permanent role or fixed responsibility."
+            },
+            {
+              id: "s1C_2_2",
+              prompt: "It's 11 am on Monday. Your colleague asks where Leo is. Explain that he is presenting the Q3 design roadmap to the leadership team right now.",
+              answer: "Leo is presenting the Q3 design roadmap to the leadership team right now. | He's in a presentation with the leadership team at the moment — showing the Q3 roadmap.",
+              correctFeedback: "✓ Present continuous — an action in progress at the exact moment of speaking."
+            },
+            {
+              id: "s1C_2_3",
+              prompt: "A junior designer asks why you always run a design critique before a client presentation. Explain the team's general practice: it helps catch issues early and improves the final deliverable.",
+              answer: "We always run a design critique before client presentations because it helps us catch issues early and deliver better work. | The team holds a critique every time before a client presentation — it consistently improves the final output.",
+              correctFeedback: "✓ Present simple — a team habit and general truth about process."
+            }
+          ]
+        },
+        {
+          id: "ex1C_3",
+          type: "fill",
+          instruction: "Complete the email extract with the correct present tense form of the verb in brackets. Some gaps test stative verbs; others test the continuous vs. simple contrast.",
+          items: [
+            {
+              id: "f1C_3_1",
+              prompt: "Hi Natalia, just a quick update. Daria ___ (lead) the Berlin client onboarding this week — she ___ (cover) for me while I'm in Lviv.",
+              answer: "is leading / is covering",
+              wrongFeedback: "✗ is leading / is covering\n💡 Both actions are temporary arrangements for a defined period ('this week', 'while I'm in Lviv') — present continuous is correct for both.",
+              correctFeedback: "✓ Correct — temporary, bounded situations use the present continuous."
+            },
+            {
+              id: "f1C_3_2",
+              prompt: "As you ___ (know), our studio ___ (not work) with clients who skip the discovery phase.",
+              answer: "know / doesn't work",
+              wrongFeedback: "✗ know / doesn't work\n💡 'Know' is stative (use present simple); 'doesn't work with' is a standing policy — also present simple.",
+              correctFeedback: "✓ Correct — stative verb + a permanent policy, both in the present simple."
+            },
+            {
+              id: "f1C_3_3",
+              prompt: "The new pitch deck ___ (look) great — Marcus ___ (add) the final case study slides as we speak.",
+              answer: "looks / is adding",
+              wrongFeedback: "✗ looks / is adding\n💡 'Looks' is stative here (appearance/opinion) → present simple; 'is adding' is an action happening right now ('as we speak') → present continuous.",
+              correctFeedback: "✓ Correct — stative 'look' stays simple; in-progress 'add' takes the continuous."
+            },
+            {
+              id: "f1C_3_4",
+              prompt: "Tomek ___ (seem) confident about the timeline, but I ___ (notice) the dev team ___ (fall) behind on the integration tasks this sprint.",
+              answer: "seems / notice / is falling",
+              wrongFeedback: "✗ seems / notice / is falling\n💡 'Seem' and 'notice' are stative → present simple; 'is falling behind' describes a current, evolving trend within this sprint → present continuous.",
+              correctFeedback: "✓ Correct — two stative verbs in simple, one dynamic verb showing a current trend in continuous."
+            },
+            {
+              id: "f1C_3_5",
+              prompt: "I ___ (not understand) why the component ___ (behave) differently in Webflow than in Figma — can you check?",
+              answer: "don't understand / is behaving",
+              wrongFeedback: "✗ don't understand / is behaving\n💡 'Understand' is stative → present simple; 'is behaving' describes what the component is doing right now (an observable, temporary quirk) → present continuous.",
+              correctFeedback: "✓ Correct — stative 'understand' stays simple; current, unusual behaviour uses continuous."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+};
 
 /* ============================================================
    ENGINE
